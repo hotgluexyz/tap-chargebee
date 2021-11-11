@@ -93,7 +93,7 @@
           "ending_unit": {
             "type": ["null", "integer"]
           },
-          "price ": {
+          "price": {
             "type": ["null", "integer"],
             "minimum": 0
           }

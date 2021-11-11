@@ -166,7 +166,7 @@
                   "ending_unit": {
                     "type": ["null", "integer"]
                   },
-                  "price ": {
+                  "price": {
                     "type": ["null", "integer"],
                     "minimum": 0
                   }
@@ -802,7 +802,7 @@
                 "zip": {
                   "type": ["null", "string"]
                 },
-                "validation_status,": {
+                "validation_status": {
                   "type": ["null", "string"]
                 }
               }
@@ -888,7 +888,7 @@
                 "gateway": {
                   "type": ["null", "string"]
                 },
-                "gateway_account_id ": {
+                "gateway_account_id": {
                   "type": ["null", "string"]
                 },
                 "status": {
@@ -913,7 +913,7 @@
                   "excess_payments": {
                     "type": ["null", "integer"]
                   },
-                  "refundable_credits ": {
+                  "refundable_credits": {
                     "type": ["null", "integer"]
                   },
                   "unbilled_charges": {
@@ -1499,7 +1499,7 @@
                 "zip": {
                   "type": ["null", "string"]
                 },
-                "validation_status,": {
+                "validation_status": {
                   "type": ["null", "string"]
                 }
               }
@@ -1823,7 +1823,7 @@
                   "zip": {
                     "type": ["null", "string"]
                   },
-                  "validation_status,": {
+                  "validation_status": {
                     "type": ["null", "string"]
                   }
                 }
@@ -2596,7 +2596,7 @@
                 "zip": {
                   "type": ["null", "string"]
                 },
-                "validation_status,": {
+                "validation_status": {
                   "type": ["null", "string"]
                 }
               }
@@ -3004,11 +3004,11 @@
                     "ending_unit": {
                       "type": ["null", "integer"]
                     },
-                    "quantity_used ": {
+                    "quantity_used": {
                       "type": ["null", "integer"],
                       "minimum": 1
                     },
-                    "unit_amount ": {
+                    "unit_amount": {
                       "type": ["null", "integer"],
                       "minimum": 0
                     }
@@ -3370,7 +3370,7 @@
                 "zip": {
                   "type": ["null", "string"]
                 },
-                "validation_status,": {
+                "validation_status": {
                   "type": ["null", "string"]
                 },
                 "object": {

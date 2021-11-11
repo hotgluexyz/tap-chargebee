@@ -137,7 +137,7 @@
                             "integer"
                         ]
                     },
-                    "unit_amount ": {
+                    "unit_amount": {
                         "type": [
                             "null",
                             "integer"
