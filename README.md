@@ -23,6 +23,7 @@ This tap:
   - [Virtual Bank Accounts](https://apidocs.chargebee.com/docs/api/virtual_bank_accounts)
 - Outputs the schema for each resource
 - Incrementally pulls data based on the input state
+- Use `schemaless` variable to pull data without aligning with input schema 
 
 ## Quick Start
 
