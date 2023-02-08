@@ -146,7 +146,7 @@ class BaseChargebeeStream(BaseStream):
             params = {"updated_at[after]": bookmark_date_posix, "status[is_not]": "failure"}
             bookmark_key = 'updated_at'
             sync_failures = True
-        elif self.ENTITY == 'customer':
+        elif self.ENTITY in ['customer', 'invoice']:
             params = {"updated_at[after]": bookmark_date_posix, "sort_by[asc]": "updated_at"}
             bookmark_key = 'updated_at'
         else:
