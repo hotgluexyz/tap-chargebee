@@ -58,14 +58,17 @@ class ChargebeeClient(BaseClient):
             params = {}
 
         LOGGER.info("Making {} request to {} with the following params {}".format(method, url, params))
-
-        response = requests.request(
-            method,
-            url,
-            auth=(self.config.get("api_key"), ''),
-            headers=self.get_headers(),
-            params=self.get_params(params),
-            json=body)
+        
+        try:
+            response = requests.request(
+                method,
+                url,
+                auth=(self.config.get("api_key"), ''),
+                headers=self.get_headers(),
+                params=self.get_params(params),
+                json=body)
+        except Exception as e:
+            raise Exception(e)
 
         if response.status_code == 429:
             sleep_time = response.headers.get("Retry-After", 60)
