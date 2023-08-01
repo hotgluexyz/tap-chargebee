@@ -153,6 +153,9 @@
           },
           "amount_in_decimal": {
             "type": ["null", "string"]
+          },
+          "reference_line_item_id": {
+            "type":["null","string"]
           }
         }
       }
