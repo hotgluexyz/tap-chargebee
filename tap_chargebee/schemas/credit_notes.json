@@ -75,11 +75,23 @@
     "sub_total": {
       "type": ["null", "integer"]
     },
+    "sub_total_in_local_currency": {
+      "type": ["null", "integer"]
+    },
+    "total_in_local_currency": {
+      "type": ["null", "integer"]
+    },
+    "local_currency_code": {
+      "type": ["null", "string"]
+    },
     "round_off_amount": {
       "type": ["null", "integer"]
     },
     "deleted": {
       "type": ["null", "boolean"]
+    },
+    "local_currency_exchange_rate": {
+      "type": ["null", "number"]
     },
     "business_entity_id": {
       "type": ["null", "string"]
