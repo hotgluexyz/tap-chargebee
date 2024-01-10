@@ -19,6 +19,7 @@ from .unbilled_charges import UnbilledChargesStream
 from .invoiced_unbilled_charges import InvoicedUnbilledChargesStream
 from .item_families import ItemFamiliesStream
 from .business_entities import BusinessEntitiesStream
+from .invoices_full_sync import InvoicesFullSyncStream
 
 AVAILABLE_STREAMS = [
     EventsStream,
@@ -35,7 +36,8 @@ AVAILABLE_STREAMS = [
     VirtualBankAccountsStream,
     UnbilledChargesStream,
     InvoicedUnbilledChargesStream,
-    BusinessEntitiesStream
+    BusinessEntitiesStream,
+    InvoicesFullSyncStream
 ]
 
 AVAILABLE_STREAMS_1_0_ONLY = [
