@@ -192,12 +192,22 @@ class BaseChargebeeStream(BaseStream):
         else:
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
             bookmark_key = 'updated_at'
-
-        LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
+        if self.ENTITY not in ['invoices_full_sync']:
+            LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
+        else:
+            LOGGER.info("Running full sync for {}".format(table))
 
         while not done:
             max_date = bookmark_date
-
+            #Force full sync for invoice_full_sync
+            if self.ENTITY in ['invoices_full_sync']:
+                if "updated_at[after]" in params:
+                    del params['updated_at[after]']
+                if "updated_at[before]" in params:
+                    del params['updated_at[before]']
+                if "sort_by[asc]" not in params:
+                    #Start sync using date asc
+                    params.update({"sort_by[asc]":"date"})    
             response = self.client.make_request(
                 url=self.get_url(),
                 method=api_method,
