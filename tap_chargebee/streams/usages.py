@@ -64,7 +64,7 @@ class UsagesStream(BaseChargebeeStream):
             response = self.client.make_request(self.get_url(), api_method, params=params)
 
             for obj in response.get('list', []):
-                to_write.append(obj)
+                to_write.append(obj.get("usage"))
 
         # Writes the data
         with singer.metrics.record_counter(endpoint=table) as ctr:
