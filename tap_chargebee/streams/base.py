@@ -39,7 +39,6 @@ class CbTransformer(singer.Transformer):
 class BaseChargebeeStream(BaseStream):
 
     START_TIMESTAP = int(datetime.utcnow().timestamp())
-    sync_data_from_parent = False
 
     def __init__(self, config, state, catalog, client):
         super().__init__(config, state, catalog, client)
@@ -210,8 +209,6 @@ class BaseChargebeeStream(BaseStream):
                     break
 
             records = response.get('list')
-
-            child_records = []
 
             to_write = self.get_stream_data(records)
 
