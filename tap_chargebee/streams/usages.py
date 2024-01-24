@@ -24,6 +24,7 @@ class UsagesStream(BaseChargebeeStream):
     API_METHOD = 'GET'
     PARENT_STREAM_TYPE = SubscriptionsStream
     _already_checked_subscription = []
+    sync_data_for_child_stream = True
 
     def get_url(self):
         return 'https://{}/api/v2/usages'.format(self.config.get('full_site'))

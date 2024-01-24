@@ -39,6 +39,7 @@ class CbTransformer(singer.Transformer):
 class BaseChargebeeStream(BaseStream):
 
     START_TIMESTAP = int(datetime.utcnow().timestamp())
+    sync_data_from_parent = False
 
     def __init__(self, config, state, catalog, client):
         super().__init__(config, state, catalog, client)
@@ -153,7 +154,7 @@ class BaseChargebeeStream(BaseStream):
         entity = self.ENTITY
         return [self.transform_record(item.get(entity)) for item in data]
 
-    def sync_data(self, child_sync=False):
+    def sync_data(self):
         table = self.TABLE
         api_method = self.API_METHOD
         done = False
@@ -210,61 +211,68 @@ class BaseChargebeeStream(BaseStream):
 
             records = response.get('list')
 
-            if child_sync:
-                yield from records
-                return
+            child_records = []
+            if self.sync_data_from_parent:
+                for record in records:
+                    child_records.append(record)
 
-            to_write = self.get_stream_data(records)
+            else:
+                to_write = self.get_stream_data(records)
 
-            if self.ENTITY == 'event':
-                for event in to_write:
-                    if event["event_type"] == 'plan_deleted':
-                        Util.plans.append(event['content']['plan'])
-                    elif event['event_type'] == 'addon_deleted':
-                        Util.addons.append(event['content']['addon'])
-                    elif event['event_type'] == 'coupon_deleted':
-                        Util.coupons.append(event['content']['coupon'])
-            if self.ENTITY == 'plan':
-                for plan in Util.plans:
-                    to_write.append(plan)
-            if self.ENTITY == 'addon':
-                for addon in Util.addons:
-                    to_write.append(addon)
-            if self.ENTITY == 'coupon':
-                for coupon in Util.coupons:
-                    to_write.append(coupon)
+                if self.ENTITY == 'event':
+                    for event in to_write:
+                        if event["event_type"] == 'plan_deleted':
+                            Util.plans.append(event['content']['plan'])
+                        elif event['event_type'] == 'addon_deleted':
+                            Util.addons.append(event['content']['addon'])
+                        elif event['event_type'] == 'coupon_deleted':
+                            Util.coupons.append(event['content']['coupon'])
+                if self.ENTITY == 'plan':
+                    for plan in Util.plans:
+                        to_write.append(plan)
+                if self.ENTITY == 'addon':
+                    for addon in Util.addons:
+                        to_write.append(addon)
+                if self.ENTITY == 'coupon':
+                    for coupon in Util.coupons:
+                        to_write.append(coupon)
 
 
-            with singer.metrics.record_counter(endpoint=table) as ctr:
-                singer.write_records(table, to_write)
+                with singer.metrics.record_counter(endpoint=table) as ctr:
+                    singer.write_records(table, to_write)
 
-                ctr.increment(amount=len(to_write))
+                    ctr.increment(amount=len(to_write))
+
+                    if bookmark_key is not None:
+                        for item in to_write:
+                            if item.get(bookmark_key) is not None:
+                                max_date = max(
+                                    max_date,
+                                    parse(item.get(bookmark_key))
+                                )
 
                 if bookmark_key is not None:
-                    for item in to_write:
-                        if item.get(bookmark_key) is not None:
-                            max_date = max(
-                                max_date,
-                                parse(item.get(bookmark_key))
-                            )
+                    self.state = incorporate(
+                        self.state, table, 'bookmark_date', max_date)
 
-            if bookmark_key is not None:
-                self.state = incorporate(
-                    self.state, table, 'bookmark_date', max_date)
-
-            if not response.get('next_offset'):
-                if sync_failures:
-                    params = {"date[after]": bookmark_date_posix, "status[is]": "failure"}
-                    sync_failures = False
+                if not response.get('next_offset'):
+                    if sync_failures:
+                        params = {"date[after]": bookmark_date_posix, "status[is]": "failure"}
+                        sync_failures = False
+                    else:
+                        LOGGER.info("Final offset reached. Ending sync.")
+                        done = True
                 else:
-                    LOGGER.info("Final offset reached. Ending sync.")
-                    done = True
-            else:
-                params['offset'] = response.get('next_offset')
-                bookmark_date = max_date
-                LOGGER.info(f"Advancing by one offset [{params}]")
+                    params['offset'] = response.get('next_offset')
+                    bookmark_date = max_date
+                    LOGGER.info(f"Advancing by one offset [{params}]")
 
-        save_state(self.state)
+            save_state(self.state)
+            return
+
+        if self.sync_data_from_parent:
+            return child_records
 
     def get_parent_stream_data(self):
-        yield from self.PARENT_STREAM_TYPE(self.config, self.state, self.catalog, self.client).sync_data(child_sync=True)
+        if self.sync_data_for_child_stream:
+            yield from self.PARENT_STREAM_TYPE(self.config, self.state, self.catalog, self.client).sync_data()
