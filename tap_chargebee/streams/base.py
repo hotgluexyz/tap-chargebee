@@ -154,7 +154,7 @@ class BaseChargebeeStream(BaseStream):
         entity = self.ENTITY
         return [self.transform_record(item.get(entity)) for item in data]
 
-    def sync_data(self):
+    def sync_data(self, sync_data_for_child_stream=False):
         table = self.TABLE
         api_method = self.API_METHOD
         done = False
@@ -212,32 +212,29 @@ class BaseChargebeeStream(BaseStream):
             records = response.get('list')
 
             child_records = []
-            if self.sync_data_from_parent:
-                for record in records:
-                    child_records.append(record)
 
-            else:
-                to_write = self.get_stream_data(records)
+            to_write = self.get_stream_data(records)
 
-                if self.ENTITY == 'event':
-                    for event in to_write:
-                        if event["event_type"] == 'plan_deleted':
-                            Util.plans.append(event['content']['plan'])
-                        elif event['event_type'] == 'addon_deleted':
-                            Util.addons.append(event['content']['addon'])
-                        elif event['event_type'] == 'coupon_deleted':
-                            Util.coupons.append(event['content']['coupon'])
-                if self.ENTITY == 'plan':
-                    for plan in Util.plans:
-                        to_write.append(plan)
-                if self.ENTITY == 'addon':
-                    for addon in Util.addons:
-                        to_write.append(addon)
-                if self.ENTITY == 'coupon':
-                    for coupon in Util.coupons:
-                        to_write.append(coupon)
+            if self.ENTITY == 'event':
+                for event in to_write:
+                    if event["event_type"] == 'plan_deleted':
+                        Util.plans.append(event['content']['plan'])
+                    elif event['event_type'] == 'addon_deleted':
+                        Util.addons.append(event['content']['addon'])
+                    elif event['event_type'] == 'coupon_deleted':
+                        Util.coupons.append(event['content']['coupon'])
+            if self.ENTITY == 'plan':
+                for plan in Util.plans:
+                    to_write.append(plan)
+            if self.ENTITY == 'addon':
+                for addon in Util.addons:
+                    to_write.append(addon)
+            if self.ENTITY == 'coupon':
+                for coupon in Util.coupons:
+                    to_write.append(coupon)
 
 
+            if not sync_data_for_child_stream:
                 with singer.metrics.record_counter(endpoint=table) as ctr:
                     singer.write_records(table, to_write)
 
@@ -246,10 +243,16 @@ class BaseChargebeeStream(BaseStream):
                     if bookmark_key is not None:
                         for item in to_write:
                             if item.get(bookmark_key) is not None:
-                                max_date = max(
-                                    max_date,
-                                    parse(item.get(bookmark_key))
-                                )
+                                try:
+                                    max_date = max(
+                                        max_date,
+                                        parse(item.get(bookmark_key))
+                                    )
+                                except TypeError:
+                                    max_date = max(
+                                        max_date,
+                                        datetime.fromtimestamp(item.get(bookmark_key), tz=dtz.gettz('UTC')
+                                    ))
 
                 if bookmark_key is not None:
                     self.state = incorporate(
@@ -267,12 +270,16 @@ class BaseChargebeeStream(BaseStream):
                     bookmark_date = max_date
                     LOGGER.info(f"Advancing by one offset [{params}]")
 
-            save_state(self.state)
-            return
+            if not sync_data_for_child_stream:
+                save_state(self.state)
+                return
 
-        if self.sync_data_from_parent:
+            else:
+                return to_write
+
+        if sync_data_for_child_stream:
             return child_records
 
     def get_parent_stream_data(self):
-        if self.sync_data_for_child_stream:
-            yield from self.PARENT_STREAM_TYPE(self.config, self.state, self.catalog, self.client).sync_data()
+        data = self.PARENT_STREAM_TYPE(self.config, self.state, self.catalog, self.client).sync_data(sync_data_for_child_stream=True)
+        return data

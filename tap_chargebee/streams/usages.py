@@ -54,7 +54,7 @@ class UsagesStream(BaseChargebeeStream):
         to_write = []
         for subscription in self.get_parent_stream_data():
             # Sets the url params
-            subscription_id = subscription['subscription']["id"]
+            subscription_id = subscription["id"]
             if subscription_id in self._already_checked_subscription:
                 continue
 
