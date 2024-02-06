@@ -20,6 +20,18 @@
           "string"
         ]
       },
+      "line_item_id": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "invoice_id": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
       "note": {
         "type": [
           "null",
