@@ -50,7 +50,7 @@ class BaseChargebeeStream(BaseStream):
             tz = dtz.gettz(timezone)
             yesterday = datetime.now(tz) - timedelta(days=1)
             # set the endDate to 11:59:59 yesterday
-            end_date = yesterday.replace(hour=11, minute=59, second=59)
+            end_date = yesterday.replace(hour=23, minute=59, second=59)
             # update the start_timestamp
             self.START_TIMESTAP = int(end_date.timestamp())
 
