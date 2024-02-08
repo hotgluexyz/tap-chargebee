@@ -1,0 +1,135 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "effective_from": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "status": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "created_at": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "updated_at": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "resource_version": {
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
+      "deleted": {
+        "type": [
+          "boolean",
+          "null"
+        ]
+      },
+      "object": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "items_to_add": {
+        "anyOf": [
+          {
+            "type": "null"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "item_price_id": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "item_type": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "quantity": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "quantity_in_decimal": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "unit_price": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "unit_price_in_decimal": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "amount": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "amount_in_decimal": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "free_quantity": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "free_quantity_in_decimal": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "object": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
