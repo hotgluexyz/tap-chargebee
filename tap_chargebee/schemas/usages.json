@@ -4,9 +4,10 @@
     "properties": {
       "created_at": {
         "type": [
-          "integer",
+          "string",
           "null"
-        ]
+        ],
+        "format": "date-time"
       },
       "id": {
         "type": [
@@ -64,15 +65,17 @@
       },
       "updated_at": {
         "type": [
-          "integer",
+          "string",
           "null"
-        ]
+        ],
+        "format": "date-time"
       },
       "usage_date": {
         "type": [
-          "integer",
+          "string",
           "null"
-        ]
+        ],
+        "format": "date-time"
       }
     }
   }

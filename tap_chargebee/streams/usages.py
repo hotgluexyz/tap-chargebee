@@ -3,10 +3,10 @@ import singer
 from .subscriptions import SubscriptionsStream
 
 from dateutil.parser import parse
+from datetime import datetime
 from tap_framework.config import get_config_start_date
 from tap_chargebee.state import get_last_record_value_for_table, incorporate, \
     save_state
-
 from tap_chargebee.streams.base import BaseChargebeeStream
 
 
@@ -53,9 +53,6 @@ class UsagesStream(BaseChargebeeStream):
 
         sync_failures = False
 
-        # Gets parent stream data
-        to_write = []
-        # total = 0
         for subscription in self.PARENT_STREAM_INSTANCE.sync_parent_data():
             # Sets the url params
             subscription_id = subscription["subscription"]["id"]
@@ -73,11 +70,16 @@ class UsagesStream(BaseChargebeeStream):
             except Exception as e:
                 response = {}
 
+            ctr = singer.metrics.record_counter(endpoint=table)
+            # Transform dates from timestamp to isoformat
             for obj in response.get('list', []):
-                to_write.append(obj.get("usage"))
+                record = obj.get("usage")
+                for key in ["created_at", "usage_date", "updated_at"]:
+                    if key in record:
+                        record[key] = datetime.fromtimestamp(record[key]).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-        with singer.metrics.record_counter(endpoint=table) as ctr:
-            singer.write_records(table, to_write)
-            ctr.increment(amount=len(to_write))
+                singer.write_records(table, [obj.get("usage")])
 
-        # Writes the data
+            if len(response.get('list', [])) > 0:
+                with singer.metrics.record_counter(endpoint=table) as ctr:
+                    ctr.increment(amount=len(response.get('list', [])))
