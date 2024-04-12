@@ -181,10 +181,7 @@ class BaseChargebeeStream(BaseStream):
             params = {"created_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
             bookmark_key = 'created_at'
         elif self.ENTITY == 'transaction':
-            fetch_all_transactions = self.config.get("fetch_all_transactions", False)
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
-            if not fetch_all_transactions:
-                params["status[is_not]"] = "failure"
+            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "status[is_not]": "failure", "sort_by[asc]": "updated_at"}
             bookmark_key = 'updated_at'
             sync_failures = True
         elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
@@ -258,7 +255,7 @@ class BaseChargebeeStream(BaseStream):
 
             if not response.get('next_offset'):
                 if sync_failures:
-                    params = {"date[after]": bookmark_date_posix, "status[is]": "failure"}
+                    params = {"updated_at[after]": bookmark_date_posix, "status[is]": "failure"}
                     sync_failures = False
                 else:
                     LOGGER.info("Final offset reached. Ending sync.")
@@ -323,7 +320,7 @@ class BaseChargebeeStream(BaseStream):
 
             if not response.get('next_offset'):
                 if sync_failures:
-                    params = {"date[after]": bookmark_date_posix, "status[is]": "failure"}
+                    params = {"updated_at[after]": bookmark_date_posix, "status[is]": "failure"}
                     sync_failures = False
                 else:
                     LOGGER.info("Final offset reached. Ending sync.")
