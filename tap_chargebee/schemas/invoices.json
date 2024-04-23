@@ -281,6 +281,18 @@
           },
           "tax_juris_code": {
             "type": ["null", "string"]
+          },
+          "tax_amount_in_local_currency": {
+            "type": [
+              "null",
+              "number"
+            ]
+          },
+          "local_currency_code": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       }
@@ -578,6 +590,12 @@
       "type": ["null", "string"]
     },
     "business_entity_id": {
+      "type": ["null", "string"]
+    },
+    "tax_amount_in_local_currency": {
+      "type": ["null", "number"]
+    },
+    "local_currency_code": {
       "type": ["null", "string"]
     }
   }
