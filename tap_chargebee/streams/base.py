@@ -172,7 +172,7 @@ class BaseChargebeeStream(BaseStream):
         # Convert bookmarked start date to POSIX.
         bookmark_date_posix = int(bookmark_date.timestamp())
 
-        sync_failures = False
+        sync_by_date = False
         # Create params for filtering
         if self.ENTITY == 'event':
             params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
@@ -183,7 +183,7 @@ class BaseChargebeeStream(BaseStream):
         elif self.ENTITY == 'transaction':
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "status[is_not]": "failure", "sort_by[asc]": "updated_at"}
             bookmark_key = 'updated_at'
-            sync_failures = True
+            sync_by_date = True
         elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
             bookmark_key = 'updated_at'
@@ -195,6 +195,7 @@ class BaseChargebeeStream(BaseStream):
 
         LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
 
+        ids = []
         while not done:
             max_date = bookmark_date
 
@@ -229,6 +230,10 @@ class BaseChargebeeStream(BaseStream):
             if self.ENTITY == 'coupon':
                 for coupon in Util.coupons:
                     to_write.append(coupon)
+            if self.ENTITY == 'transaction':
+                # store ids to clean dupplicates
+                to_write = [record for record in to_write if record["id"] not in ids]
+                ids.extend([trans["id"] for trans in to_write])
 
             with singer.metrics.record_counter(endpoint=table) as ctr:
                 singer.write_records(table, to_write)
@@ -254,9 +259,11 @@ class BaseChargebeeStream(BaseStream):
                     self.state, table, 'bookmark_date', max_date)
 
             if not response.get('next_offset'):
-                if sync_failures:
-                    params = {"updated_at[after]": bookmark_date_posix, "status[is]": "failure"}
-                    sync_failures = False
+                if sync_by_date:
+                    # fetching all transactions first by updated_at and then by date, 
+                    # because some failed transactions have empty values in updated_at 
+                    params = {"date[after]": bookmark_date_posix, "sort_by[asc]": "date"}
+                    sync_by_date = False
                 else:
                     LOGGER.info("Final offset reached. Ending sync.")
                     done = True
@@ -286,15 +293,15 @@ class BaseChargebeeStream(BaseStream):
         # Convert bookmarked start date to POSIX.
         bookmark_date_posix = int(bookmark_date.timestamp())
 
-        sync_failures = False
+        sync_by_date = False
         # Create params for filtering
         if self.ENTITY == 'event':
             params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
         elif self.ENTITY == 'promotional_credit':
             params = {"created_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
         elif self.ENTITY == 'transaction':
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "status[is_not]": "failure", "sort_by[asc]": "updated_at"}
-            sync_failures = True
+            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
+            sync_by_date = True
         elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
             if self.ENTITY in ['invoice'] and self.config.get('exclude_zero_invoices'):
@@ -304,6 +311,7 @@ class BaseChargebeeStream(BaseStream):
 
         LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
 
+        ids = []
         while not done:
             try:
                 response = self.client.make_request(
@@ -316,12 +324,18 @@ class BaseChargebeeStream(BaseStream):
             records = response.get('list', [])
 
             for record in records:
+                # clean duplicate values for transactions
+                if self.ENTITY == 'transaction':
+                    if record["id"] not in ids:
+                        ids.append(record["id"])
+                    else:
+                        continue
                 yield record
 
             if not response.get('next_offset'):
-                if sync_failures:
-                    params = {"updated_at[after]": bookmark_date_posix, "status[is]": "failure"}
-                    sync_failures = False
+                if sync_by_date:
+                    params = {"date[after]": bookmark_date_posix, "sort_by[asc]": "date_at"}
+                    sync_by_date = False
                 else:
                     LOGGER.info("Final offset reached. Ending sync.")
                     done = True
