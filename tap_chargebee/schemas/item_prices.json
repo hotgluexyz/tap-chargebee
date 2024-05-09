@@ -165,6 +165,12 @@
           "type": ["null", "string"]
         }
       }
+    },
+    "price_variant_id": {
+      "type": [
+        "null",
+        "string"
+      ]
     }
   }
 }

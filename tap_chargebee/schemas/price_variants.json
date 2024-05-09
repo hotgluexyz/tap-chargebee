@@ -1,0 +1,50 @@
+{
+  "type": ["null", "object"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": ["null", "string"]
+    },
+    "name": {
+      "type": ["null", "string"]
+    },
+    "created_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "attributes": {
+      "type": [
+        "null",
+        "array"
+      ],
+      "items": {
+        "type": [
+          "null",
+          "string"
+        ]
+      }
+    },
+    "resource_version": {
+      "type": [
+        "null",
+        "integer"
+      ]
+    },  
+  "status": {
+    "type": [
+      "null",
+      "string"
+    ]
+  },
+  "object": {
+    "type": [
+      "null",
+      "string"
+    ]
+  }
+
+  }
+}
