@@ -126,12 +126,12 @@ class BaseChargebeeStream(BaseStream):
                         event_custom_fields[k] = record['content'][content_obj][k]
                 record['content'][content_obj]['custom_fields'] = json.dumps(event_custom_fields)
 
-
-        for key in record.keys():
-            if "cf_" in key:
-                custom_fields[key] = record[key]
-        if custom_fields:
-            record['custom_fields'] = json.dumps(custom_fields)
+        if record:
+            for key in record.keys():
+                if "cf_" in key:
+                    custom_fields[key] = record[key]
+            if custom_fields:
+                record['custom_fields'] = json.dumps(custom_fields)
         return record
 
     # This overrides the transform_record method in the Fistown Analytics tap-framework package
@@ -242,17 +242,18 @@ class BaseChargebeeStream(BaseStream):
 
                 if bookmark_key is not None:
                     for item in to_write:
-                        if item.get(bookmark_key) is not None:
-                            try:
-                                max_date = max(
-                                    max_date,
-                                    parse(item.get(bookmark_key))
-                                )
-                            except TypeError:
-                                max_date = max(
-                                    max_date,
-                                    datetime.fromtimestamp(item.get(bookmark_key), tz=dtz.gettz('UTC')
-                                ))
+                        if item:
+                            if item.get(bookmark_key) is not None:
+                                try:
+                                    max_date = max(
+                                        max_date,
+                                        parse(item.get(bookmark_key))
+                                    )
+                                except TypeError:
+                                    max_date = max(
+                                        max_date,
+                                        datetime.fromtimestamp(item.get(bookmark_key), tz=dtz.gettz('UTC')
+                                    ))
 
             if bookmark_key is not None:
                 self.state = incorporate(

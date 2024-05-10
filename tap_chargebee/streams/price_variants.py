@@ -3,7 +3,7 @@ from tap_chargebee.streams.base import BaseChargebeeStream
 
 class PriceVariantsStream(BaseChargebeeStream):
     TABLE = "price_variants"
-    ENTITY = "price_variants"
+    ENTITY = "price_variant"
     REPLICATION_METHOD = 'INCREMENTAL'
     REPLICATION_KEY = 'updated_at'
     KEY_PROPERTIES = ['id']
