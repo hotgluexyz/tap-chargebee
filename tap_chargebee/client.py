@@ -76,7 +76,7 @@ class ChargebeeClient(BaseClient):
             raise Server429Error()
 
         if response.status_code >= 400:
-            if "This API operation is not enabled" in response.text:
+            if "This API operation is not enabled" in response.text and "/price_variants" in url:
                 LOGGER.warn(f"{response.request.url}: {response.text}")
             else:
                 raise Server4xxError(response.text)
