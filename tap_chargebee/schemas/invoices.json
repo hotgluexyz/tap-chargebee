@@ -597,6 +597,13 @@
     },
     "local_currency_exchange_rate": {
       "type": ["null","number"]
+    },
+    "generated_at": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "format": "date-time"
     }
   }
 }
