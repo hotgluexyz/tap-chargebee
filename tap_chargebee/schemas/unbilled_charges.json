@@ -172,6 +172,13 @@
                 "string"
             ]
 
+        },
+        "business_entity_id" : {
+            "type": [
+                "null", 
+                "string"
+            ]
+
         }
 
     }
