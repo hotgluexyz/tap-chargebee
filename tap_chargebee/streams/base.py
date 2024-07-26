@@ -176,6 +176,13 @@ class BaseChargebeeStream(BaseStream):
         # Create params for filtering
         if self.ENTITY == 'event':
             params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
+            # if event types set in config filter by event types
+            event_types = self.config.get("event_types")
+            if event_types:
+                if isinstance(event_types, str):
+                    event_types = event_types.split(",")
+                    event_types = [event.strip() for event in event_types]
+                params.update({"event_type[in]": str(event_types)})
             bookmark_key = 'occurred_at'
         elif self.ENTITY == 'promotional_credit':
             params = {"created_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}

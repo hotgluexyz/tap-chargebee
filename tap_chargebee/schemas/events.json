@@ -2565,6 +2565,94 @@
                   "type": ["null", "boolean"]
                 }
               }
+            },
+            "subscription_items":{
+              "type": ["null","array"],
+              "items": {
+                "type": ["null","object"],
+                "properties":{
+                  "item_price_id":{
+                    "type": ["null","string"]
+                  },
+                  "item_type":{
+                    "type": ["null","string"]
+                  },
+                  "quantity":{
+                    "type": ["null","number"]
+                  },
+                  "unit_price":{
+                    "type": ["null","number"]
+                  },
+                  "amount":{
+                    "type": ["null","number"]
+                  },
+                  "current_term_start":{
+                    "type": ["null","string"],
+                    "format": "date-time"
+                  },
+                  "current_term_end":{
+                    "type": ["null","string"],
+                    "format": "date-time"
+                  },
+                  "next_billing_at":{
+                    "type": ["null","string"],
+                    "format": "date-time"
+                  },
+                  "free_quantity":{
+                    "type": ["null","number"]
+                  },
+                  "billing_cycles":{
+                    "type": ["null","integer"]
+                  },
+                  "object":{
+                    "type": ["null","string"]
+                  }
+                }
+              }
+            },
+            "contract_term":{
+              "type": ["null","object"],
+              "properties":{
+                "id":{
+                  "type": ["null","string"]
+                },
+                "status":{
+                  "type": ["null","string"]
+                },
+                "contract_start":{
+                  "type": ["null","string"],
+                  "format": "date-time"
+                },
+                "contract_end":{
+                  "type": ["null","string"],
+                  "format": "date-time"
+                },
+                "billing_cycle":{
+                  "type": ["null","integer"]
+                },
+                "action_at_term_end":{
+                  "type": ["null","string"]
+                },
+                "total_contract_value":{
+                  "type": ["null","number"]
+                },
+                "total_contract_value_before_tax":{
+                  "type": ["null","number"]
+                },
+                "cancellation_cutoff_period":{
+                  "type": ["null","number"]
+                },
+                "created_at":{
+                  "type": ["null","string"],
+                  "format": "date-time"
+                },
+                "object":{
+                  "type": ["null","string"]
+                },
+                "remaining_billing_cycles":{
+                  "type": ["null","integer"]
+                }
+              }
             }
           }
         },
