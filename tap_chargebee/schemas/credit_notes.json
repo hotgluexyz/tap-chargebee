@@ -42,6 +42,15 @@
     "currency_code": {
       "type": ["null", "string"]
     },
+    "base_currency_code": { 
+      "type": ["null", "string"]
+    },
+    "local_currency_code": { 
+      "type": ["null", "string"]
+    },
+    "local_currency_exchange_rate": { 
+      "type": ["null", "number"]
+    },
     "exchange_rate": {
       "type": ["null", "number"]
     },
