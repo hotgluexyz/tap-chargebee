@@ -15,3 +15,13 @@ class CreditNotesStream(BaseChargebeeStream):
 
     def get_url(self):
         return 'https://{}/api/v2/credit_notes'.format(self.config.get('full_site'))
+    
+    def get_schema(self):
+        schema = super().get_schema()
+        schema['properties'] = {
+            **schema['properties'],
+            "base_currency_code": { "type": ["null", "string"] },
+            "local_currency_code": { "type": ["null", "string"] },
+            "local_currency_exchange_rate": { "type": ["null", "number"] },
+        }
+        return schema
