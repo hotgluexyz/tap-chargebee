@@ -35,7 +35,7 @@ class CbTransformer(singer.Transformer):
 
 
 class BaseChargebeeStream(BaseStream):
-
+    ENTITY = None
     START_TIMESTAP = int(datetime.utcnow().timestamp())
 
     def __init__(self, config, state, catalog, client):
@@ -51,6 +51,7 @@ class BaseChargebeeStream(BaseStream):
             end_date = yesterday.replace(hour=23, minute=59, second=59)
             # update the start_timestamp
             self.START_TIMESTAP = int(end_date.timestamp())
+
 
     def write_schema(self):
         singer.write_schema(
@@ -201,11 +202,10 @@ class BaseChargebeeStream(BaseStream):
         LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
 
         if self.config.get("filters"):
-            entity_filters: dict[str,str] = self.config.get("filters", {}).get(self.ENTITY)
-            if entity_filters:
-                for field_name, field_value in entity_filters.items():
-                    params[field_name] = field_value
-                    LOGGER.info("Querying filtering by {}={}".format(field_name, field_value))
+            entity_filters = self.config.get("filters", {}).get(self.ENTITY, {})
+            for field_name, field_value in entity_filters.items():
+                params[field_name] = field_value
+                LOGGER.info("Querying filtering by {}={}".format(field_name, field_value))
                 
         ids = []
         while not done:
