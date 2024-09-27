@@ -1,5 +1,4 @@
 import singer
-import time
 import json
 import os
 
@@ -8,7 +7,6 @@ from datetime import datetime, timedelta
 import dateutil.tz as dtz
 from dateutil.parser import parse
 from tap_framework.streams import BaseStream
-from tap_framework.schemas import load_schema_by_name
 from tap_framework.config import get_config_start_date
 from tap_chargebee.state import get_last_record_value_for_table, incorporate, \
     save_state
@@ -199,9 +197,16 @@ class BaseChargebeeStream(BaseStream):
         else:
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
             bookmark_key = 'updated_at'
-
+        
         LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
 
+        if self.config.get("filters"):
+            entity_filters: dict[str,str] = self.config.get("filters", {}).get(self.ENTITY)
+            if entity_filters:
+                for field_name, field_value in entity_filters.items():
+                    params[field_name] = field_value
+                    LOGGER.info("Querying filtering by {}={}".format(field_name, field_value))
+                
         ids = []
         while not done:
             max_date = bookmark_date
