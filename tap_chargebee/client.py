@@ -79,6 +79,7 @@ class ChargebeeClient(BaseClient):
             if "This API operation is not enabled" in response.text and "/price_variants" in url:
                 LOGGER.warn(f"{response.request.url}: {response.text}")
             else:
+                LOGGER.error("Making {} request to {} with the following params {} got error {}".format(method, url, params, response.text))
                 raise Server4xxError(response.text)
 
         response_json = response.json()
