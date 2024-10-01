@@ -275,7 +275,7 @@ class BaseChargebeeStream(BaseStream):
                 if sync_by_date:
                     # fetching all transactions first by updated_at and then by date, 
                     # because some failed transactions have empty values in updated_at 
-                    params = {"date[after]": bookmark_date_posix, "sort_by[asc]": "date"}
+                    params = {"date[after]": bookmark_date_posix, "date[before]":self.START_TIMESTAP, "sort_by[asc]": "date"}
                     sync_by_date = False
                 else:
                     LOGGER.info("Final offset reached. Ending sync.")
