@@ -277,7 +277,8 @@ class BaseChargebeeStream(BaseStream):
                     # because some failed transactions have empty values in updated_at 
                     params = {"date[after]": bookmark_date_posix, "date[before]":self.START_TIMESTAP, "sort_by[asc]": "date"}
                     sync_by_date = False
-                else:
+                    bookmark_key = "date"
+                else:   
                     LOGGER.info("Final offset reached. Ending sync.")
                     done = True
             else:
