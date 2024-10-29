@@ -41,8 +41,9 @@ class BaseChargebeeStream(BaseStream):
     def __init__(self, config, state, catalog, client):
         super().__init__(config, state, catalog, client)
 
-        # Only do this if it's a scheduled job
-        if config.get("timezone") and os.environ.get("SCHEDULED_JOB"):
+        # Only do this if it's a scheduled job and use_end_date is set as True
+        use_end_date = config.get("use_end_date", True) # true as default
+        if config.get("timezone") and os.environ.get("SCHEDULED_JOB") and use_end_date:
             # Calculate yesterday based on the timezone set in the tap-chargebee config
             timezone = config["timezone"]
             tz = dtz.gettz(timezone)
