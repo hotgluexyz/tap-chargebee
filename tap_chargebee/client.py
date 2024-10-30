@@ -76,7 +76,7 @@ class ChargebeeClient(BaseClient):
             raise Server429Error()
 
         if response.status_code >= 400:
-            if "This API operation is not enabled" in response.text and "/price_variants" in url:
+            if "configuration_incompatible" in response.text and "/price_variants" in url:
                 LOGGER.warn(f"{response.request.url}: {response.text}")
             else:
                 LOGGER.error("Making {} request to {} with the following params {} got error {}".format(method, url, params, response.text))
