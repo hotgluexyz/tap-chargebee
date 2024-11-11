@@ -243,10 +243,14 @@ class BaseChargebeeStream(BaseStream):
             if self.ENTITY == 'coupon':
                 for coupon in Util.coupons:
                     to_write.append(coupon)
-            if self.ENTITY == 'transaction':
-                # store ids to clean dupplicates
-                to_write = [record for record in to_write if record["id"] not in ids]
-                ids.extend([trans["id"] for trans in to_write])
+            if self.ENTITY in ['transaction', 'subscription']:
+                # store ids to clean dupplicates, keep only the last appearance of a record id
+                new_records = []
+                for record in reversed(to_write):
+                    if record["id"] not in ids:
+                        new_records.append(record)
+                        ids.append(record["id"])
+                to_write = new_records
 
             with singer.metrics.record_counter(endpoint=table) as ctr:
                 singer.write_records(table, to_write)
