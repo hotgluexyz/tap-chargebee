@@ -208,7 +208,7 @@ class BaseChargebeeStream(BaseStream):
                 params[field_name] = field_value
                 LOGGER.info("Querying filtering by {}={}".format(field_name, field_value))
                 
-        ids = []
+        ids = dict()
         while not done:
             max_date = bookmark_date
 
@@ -243,15 +243,15 @@ class BaseChargebeeStream(BaseStream):
             if self.ENTITY == 'coupon':
                 for coupon in Util.coupons:
                     to_write.append(coupon)
-            if self.ENTITY == 'transaction':
-                # store ids to clean dupplicates
-                to_write = [record for record in to_write if record["id"] not in ids]
-                ids.extend([trans["id"] for trans in to_write])
+            if self.ENTITY in ['transaction', 'subscription']:
+                # store ids to clean dupplicates, keep only the last appearance of a record id
+                for record in to_write:
+                    ids[record["id"]] = record
 
             with singer.metrics.record_counter(endpoint=table) as ctr:
-                singer.write_records(table, to_write)
-
-                ctr.increment(amount=len(to_write))
+                if not ids:
+                    singer.write_records(table, to_write)
+                    ctr.increment(amount=len(to_write))
 
                 if bookmark_key is not None:
                     for item in to_write:
@@ -268,7 +268,7 @@ class BaseChargebeeStream(BaseStream):
                                         datetime.fromtimestamp(item.get(bookmark_key), tz=dtz.gettz('UTC')
                                     ))
 
-            if bookmark_key is not None:
+            if bookmark_key is not None and not ids:
                 self.state = incorporate(
                     self.state, table, 'bookmark_date', max_date)
 
@@ -288,6 +288,16 @@ class BaseChargebeeStream(BaseStream):
                 LOGGER.info(f"Advancing by one offset [{params}]")
 
             save_state(self.state)
+        if ids:
+            with singer.metrics.record_counter(endpoint=table) as ctr:
+                to_write = list(ids.values())
+                singer.write_records(table, to_write)
+                ctr.increment(amount=len(to_write))
+            if bookmark_key is not None:
+                self.state = incorporate(
+                    self.state, table, 'bookmark_date', max_date)
+                save_state(self.state)
+                
 
     def sync_parent_data(self):
         table = self.TABLE
