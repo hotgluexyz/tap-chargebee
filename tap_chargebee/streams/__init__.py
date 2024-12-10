@@ -40,8 +40,6 @@ AVAILABLE_STREAMS = [
     InvoicedUnbilledChargesStream,
     BusinessEntitiesStream,
     UsagesStream,
-    RampsStream,
-    PriceVariantsStream,
 ]
 
 AVAILABLE_STREAMS_1_0_ONLY = [
@@ -52,7 +50,9 @@ AVAILABLE_STREAMS_1_0_ONLY = [
 AVAILABLE_STREAMS_2_0_ONLY = [
     ItemsStream,
     ItemPricesStream,
-    ItemFamiliesStream
+    ItemFamiliesStream,
+    PriceVariantsStream,
+    RampsStream,
 ]
 
 AVAILABLE_STREAMS_1_0 = AVAILABLE_STREAMS + AVAILABLE_STREAMS_1_0_ONLY
