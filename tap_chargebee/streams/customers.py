@@ -15,3 +15,9 @@ class CustomersStream(BaseChargebeeStream):
 
     def get_url(self):
         return 'https://{}/api/v2/customers'.format(self.config.get('full_site'))
+
+    def get_params(self, params):
+        params = super().get_params(params)
+        if self.config.get('include_deprecated') is True:
+            params["include_deprecated"] = "true"
+        return params

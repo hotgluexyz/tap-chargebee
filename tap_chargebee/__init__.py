@@ -16,6 +16,7 @@ def main():
         required_config_keys=['api_key', 'start_date'])
 
     full_site = args.config.get('full_site', None)
+    args.config['include_deprecated'] = args.config.get('include_deprecated', False)
     
     product_catalog = args.config.get('product_catalog', '1.0')
 
