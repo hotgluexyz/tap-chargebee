@@ -5,6 +5,9 @@
     "id": {
       "type": ["null", "string"]
     },
+    "active_id": {
+      "type": ["null", "string"]
+    },
     "customer_id": {
       "type": ["null", "string"]
     },
