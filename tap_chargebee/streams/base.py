@@ -208,6 +208,9 @@ class BaseChargebeeStream(BaseStream):
             for field_name, field_value in entity_filters.items():
                 params[field_name] = field_value
                 LOGGER.info("Querying filtering by {}={}".format(field_name, field_value))
+        
+        if self.config.get('include_deprecated') is True and self.TABLE in ['customers', 'subscriptions']:
+            params["include_deprecated"] = "true"
                 
         ids = set()
         while not done:
