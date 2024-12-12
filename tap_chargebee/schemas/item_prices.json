@@ -5,6 +5,9 @@
     "id": {
       "type": ["null", "string"]
     },
+    "cf_revrec_loc_name": {
+      "type": ["null", "string"]
+    },
     "custom_fields": {
       "type": ["null", "string"]
     },
