@@ -20,6 +20,9 @@
     "cf_product_type": {
       "type": ["null", "string"]
     },
+    "cf_plan_migrated": {
+      "type": ["null", "string"]
+    },
     "name": {
       "type": ["null", "string"]
     },
