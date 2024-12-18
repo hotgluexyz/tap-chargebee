@@ -5,7 +5,7 @@
     "id": {
       "type": ["null", "string"]
     },
-    "cf_revrec_loc_name": {
+    "cf_RevRec_LOC_Name": {
       "type": ["null", "string"]
     },
     "custom_fields": {
