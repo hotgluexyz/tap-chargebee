@@ -208,7 +208,7 @@ class BaseChargebeeStream(BaseStream):
                 params[field_name] = field_value
                 LOGGER.info("Querying filtering by {}={}".format(field_name, field_value))
                 
-        ids = []
+        ids = set()
         while not done:
             max_date = bookmark_date
 
@@ -248,7 +248,7 @@ class BaseChargebeeStream(BaseStream):
             if self.ENTITY == 'transaction':
                 # store ids to clean dupplicates
                 to_write = [record for record in to_write if record["id"] not in ids]
-                ids.extend([trans["id"] for trans in to_write])
+                ids.update([trans["id"] for trans in to_write])
 
             with singer.metrics.record_counter(endpoint=table) as ctr:
                 singer.write_records(table, to_write)
@@ -328,7 +328,7 @@ class BaseChargebeeStream(BaseStream):
 
         LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
 
-        ids = []
+        ids = set()
         while not done:
             try:
                 response = self.client.make_request(
@@ -344,7 +344,7 @@ class BaseChargebeeStream(BaseStream):
                 # clean duplicate values for transactions
                 if self.ENTITY == 'transaction':
                     if record["id"] not in ids:
-                        ids.append(record["id"])
+                        ids.add(record["id"])
                     else:
                         continue
                 yield record
