@@ -1,3 +1,4 @@
+import math
 import singer
 import json
 import os
@@ -157,141 +158,143 @@ class BaseChargebeeStream(BaseStream):
     def sync_data(self):
         table = self.TABLE
         api_method = self.API_METHOD
-        done = False
-
-        # Attempt to get the bookmark date from the state file (if one exists and is supplied).
+        
+        # Attempt to get the bookmark date from the state file
         LOGGER.info('Attempting to get the most recent bookmark_date for entity {}.'.format(self.ENTITY))
         bookmark_date = get_last_record_value_for_table(self.state, table, 'bookmark_date')
 
-        # If there is no bookmark date, fall back to using the start date from the config file.
+        # If there is no bookmark date, fall back to using the start date from the config
         if bookmark_date is None:
             LOGGER.info('Could not locate bookmark_date from STATE file. Falling back to start_date from config.json instead.')
             bookmark_date = get_config_start_date(self.config)
         else:
             bookmark_date = parse(bookmark_date)
 
-        # Convert bookmarked start date to POSIX.
-        bookmark_date_posix = int(bookmark_date.timestamp())
-
-        sync_by_date = False
-        # Create params for filtering
-        if self.ENTITY == 'event':
-            params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
-            # if event types set in config filter by event types
-            event_types = self.config.get("event_types")
-            if event_types:
-                if isinstance(event_types, str):
-                    event_types = event_types.split(",")
-                    event_types = [event.strip() for event in event_types]
-                params.update({"event_type[in]": str(event_types)})
-            bookmark_key = 'occurred_at'
-        elif self.ENTITY == 'promotional_credit':
-            params = {"created_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
-            bookmark_key = 'created_at'
-        elif self.ENTITY == 'transaction':
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
-            bookmark_key = 'updated_at'
-            sync_by_date = True
-        elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
-            bookmark_key = 'updated_at'
-            if self.ENTITY in ['invoice'] and self.config.get('exclude_zero_invoices'):
-                params['total[is_not]'] = 0
-        else:
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
-            bookmark_key = 'updated_at'
+        # Convert bookmarked start date to datetime
+        current_window_start_dt = datetime.fromtimestamp(int(bookmark_date.timestamp()))
         
-        LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
-
-        if self.config.get("filters"):
-            entity_filters = self.config.get("filters", {}).get(self.ENTITY, {})
-            for field_name, field_value in entity_filters.items():
-                params[field_name] = field_value
-                LOGGER.info("Querying filtering by {}={}".format(field_name, field_value))
-        
-        if self.config.get('include_deprecated') is True and self.TABLE in ['customers', 'subscriptions']:
-            params["include_deprecated"] = "true"
-                
-        ids = set()
-        while not done:
-            max_date = bookmark_date
-
-            response = self.client.make_request(
-                url=self.get_url(),
-                method=api_method,
-                params=params)
-
-            if 'api_error_code' in response.keys():
-                if response['api_error_code'] == 'configuration_incompatible':
-                    LOGGER.error('{} is not configured'.format(response['error_code']))
-                    break
-
-            records = response.get('list')
-
-            to_write = self.get_stream_data(records)
-
-            if self.ENTITY == 'event':
-                for event in to_write:
-                    if event["event_type"] == 'plan_deleted':
-                        Util.plans.append(event['content']['plan'])
-                    elif event['event_type'] == 'addon_deleted':
-                        Util.addons.append(event['content']['addon'])
-                    elif event['event_type'] == 'coupon_deleted':
-                        Util.coupons.append(event['content']['coupon'])
-            if self.ENTITY == 'plan':
-                for plan in Util.plans:
-                    to_write.append(plan)
-            if self.ENTITY == 'addon':
-                for addon in Util.addons:
-                    to_write.append(addon)
-            if self.ENTITY == 'coupon':
-                for coupon in Util.coupons:
-                    to_write.append(coupon)
-            if self.ENTITY == 'transaction':
-                # store ids to clean dupplicates
-                to_write = [record for record in to_write if record["id"] not in ids]
-                ids.update([trans["id"] for trans in to_write])
-
-            with singer.metrics.record_counter(endpoint=table) as ctr:
-                singer.write_records(table, to_write)
-
-                ctr.increment(amount=len(to_write))
-
-                if bookmark_key is not None:
-                    for item in to_write:
-                        if item:
-                            if item.get(bookmark_key) is not None:
-                                try:
-                                    max_date = max(
-                                        max_date,
-                                        parse(item.get(bookmark_key))
-                                    )
-                                except TypeError:
-                                    max_date = max(
-                                        max_date,
-                                        datetime.fromtimestamp(item.get(bookmark_key), tz=dtz.gettz('UTC')
-                                    ))
-
-
-            if bookmark_key is not None:
-                self.state = incorporate(
-                    self.state, table, 'bookmark_date', max_date)
-
-            if not response.get('next_offset'):
-                if sync_by_date:
-                    # fetching all transactions first by updated_at and then by date, 
-                    # because some failed transactions have empty values in updated_at 
-                    params = {"date[after]": bookmark_date_posix, "date[before]":self.START_TIMESTAP, "sort_by[asc]": "date"}
-                    sync_by_date = False
-                    bookmark_key = "date"
-                else:   
-                    LOGGER.info("Final offset reached. Ending sync.")
-                    done = True
+        while math.ceil(current_window_start_dt.timestamp()) < self.START_TIMESTAP:
+            # Calculate end of current month
+            if current_window_start_dt.month == 12:
+                current_window_end_dt = current_window_start_dt.replace(year=current_window_start_dt.year + 1, 
+                                                                      month=1, 
+                                                                      day=1)
             else:
-                params['offset'] = response.get('next_offset')
-                bookmark_date = max_date
-                LOGGER.info(f"Advancing by one offset [{params}]")
+                current_window_end_dt = current_window_start_dt.replace(month=current_window_start_dt.month + 1, 
+                                                                      day=1)
+            
+            # Ensure we don't go beyond START_TIMESTAP
+            current_window_end_dt = min(current_window_end_dt, 
+                                      datetime.fromtimestamp(self.START_TIMESTAP))
+            
+            # Convert to timestamps for the API
+            current_window_start = int(current_window_start_dt.timestamp())
+            current_window_end = int(current_window_end_dt.timestamp())
+            
+            LOGGER.info(f"Syncing {table} from {current_window_start_dt.strftime('%Y-%m-%d')} "
+                       f"to {current_window_end_dt.strftime('%Y-%m-%d')}")
+            
+            # Initialize params based on entity type
+            if self.ENTITY == 'event':
+                params = {"occurred_at[after]": current_window_start, "occurred_at[before]": current_window_end}
+                event_types = self.config.get("event_types")
+                if event_types:
+                    if isinstance(event_types, str):
+                        event_types = event_types.split(",")
+                        event_types = [event.strip() for event in event_types]
+                    params.update({"event_type[in]": str(event_types)})
+                bookmark_key = 'occurred_at'
+            elif self.ENTITY == 'promotional_credit':
+                params = {"created_at[after]": current_window_start, "created_at[before]": current_window_end}
+                bookmark_key = 'created_at'
+            elif self.ENTITY == 'transaction':
+                params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end, "sort_by[asc]": "updated_at"}
+                bookmark_key = 'updated_at'
+                sync_by_date = True
+            elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
+                params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end, "sort_by[asc]": "updated_at"}
+                bookmark_key = 'updated_at'
+                if self.ENTITY in ['invoice'] and self.config.get('exclude_zero_invoices'):
+                    params['total[is_not]'] = 0
+            else:
+                params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end}
+                bookmark_key = 'updated_at'
 
+            # Apply additional filters if configured
+            if self.config.get("filters"):
+                entity_filters = self.config.get("filters", {}).get(self.ENTITY, {})
+                for field_name, field_value in entity_filters.items():
+                    params[field_name] = field_value
+                    
+            if self.config.get('include_deprecated') is True and self.TABLE in ['customers', 'subscriptions']:
+                params["include_deprecated"] = "true"
+
+            # Process current window
+            done = False
+            ids = set()
+            while not done:
+                response = self.client.make_request(
+                    url=self.get_url(),
+                    method=api_method,
+                    params=params)
+
+                if 'api_error_code' in response.keys():
+                    if response['api_error_code'] == 'configuration_incompatible':
+                        LOGGER.error('{} is not configured'.format(response['error_code']))
+                        break
+
+                records = response.get('list', [])
+                to_write = self.get_stream_data(records)
+
+                if self.ENTITY == 'event':
+                    for event in to_write:
+                        if event["event_type"] == 'plan_deleted':
+                            Util.plans.append(event['content']['plan'])
+                        elif event['event_type'] == 'addon_deleted':
+                            Util.addons.append(event['content']['addon'])
+                        elif event['event_type'] == 'coupon_deleted':
+                            Util.coupons.append(event['content']['coupon'])
+                if self.ENTITY == 'plan':
+                    for plan in Util.plans:
+                        to_write.append(plan)
+                if self.ENTITY == 'addon':
+                    for addon in Util.addons:
+                        to_write.append(addon)
+                if self.ENTITY == 'coupon':
+                    for coupon in Util.coupons:
+                        to_write.append(coupon)
+                if self.ENTITY == 'transaction':
+                    # store ids to clean duplicates
+                    to_write = [record for record in to_write if record["id"] not in ids]
+                    ids.update([trans["id"] for trans in to_write])
+                if self.ENTITY == 'business_entity':
+                    filtered_records = []
+                    for record in to_write:
+                        try:
+                            # Parse ISO format datetime string to timestamp
+                            updated_at = int(parse(record['updated_at']).timestamp())
+                            if updated_at > current_window_start and updated_at < current_window_end:
+                                filtered_records.append(record)
+                        except (ValueError, TypeError) as e:
+                            LOGGER.warning(f"Could not process record timestamp: {record.get('updated_at')} - {str(e)}")
+                    to_write = filtered_records
+
+                with singer.metrics.record_counter(endpoint=table) as ctr:
+                    singer.write_records(table, to_write)
+                    ctr.increment(amount=len(to_write))
+
+                if not response.get('next_offset'):
+                    done = True
+                else:
+                    params['offset'] = response.get('next_offset')
+                    LOGGER.info(f"Advancing by one offset within window [{params}]")
+
+            # Move to next window (start of next month)
+            current_window_start_dt = current_window_end_dt
+            
+            # Save state after each window
+            self.state = incorporate(self.state, table, 'bookmark_date', 
+                                   current_window_end_dt.replace(tzinfo=dtz.gettz('UTC')))
             save_state(self.state)
 
     def sync_parent_data(self):
@@ -314,11 +317,13 @@ class BaseChargebeeStream(BaseStream):
         bookmark_date_posix = int(bookmark_date.timestamp())
 
         sync_by_date = False
+        date_sync_attempted = False  # Add flag to prevent infinite loop
+        
         # Create params for filtering
         if self.ENTITY == 'event':
             params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
         elif self.ENTITY == 'promotional_credit':
-            params = {"created_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
+            params = {"created_at[after]": bookmark_date_posix, "created_at[before]": self.START_TIMESTAP}
         elif self.ENTITY == 'transaction':
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
             sync_by_date = True
@@ -353,9 +358,10 @@ class BaseChargebeeStream(BaseStream):
                 yield record
 
             if not response.get('next_offset'):
-                if sync_by_date:
+                if sync_by_date and not date_sync_attempted:
                     params = {"date[after]": bookmark_date_posix, "sort_by[asc]": "date_at"}
                     sync_by_date = False
+                    date_sync_attempted = True  # Mark that we've attempted date sync
                 else:
                     LOGGER.info("Final offset reached. Ending sync.")
                     done = True

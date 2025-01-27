@@ -35,51 +35,79 @@ class UsagesStream(BaseChargebeeStream):
     def sync_data(self):
         table = self.TABLE
         api_method = self.API_METHOD
-        done = False
 
-        # Attempt to get the bookmark date from the state file (if one exists and is supplied).
+        # Attempt to get the bookmark date from the state file
         LOGGER.info('Attempting to get the most recent bookmark_date for entity {}.'.format(self.ENTITY))
         bookmark_date = get_last_record_value_for_table(self.state, table, 'bookmark_date')
 
-        # If there is no bookmark date, fall back to using the start date from the config file.
+        # If there is no bookmark date, fall back to using the start date from the config
         if bookmark_date is None:
             LOGGER.info('Could not locate bookmark_date from STATE file. Falling back to start_date from config.json instead.')
             bookmark_date = get_config_start_date(self.config)
         else:
             bookmark_date = parse(bookmark_date)
 
-        # Convert bookmarked start date to POSIX.
-        bookmark_date_posix = int(bookmark_date.timestamp())
+        # Convert bookmarked start date to datetime
+        current_window_start_dt = datetime.fromtimestamp(int(bookmark_date.timestamp()))
+        
+        while current_window_start_dt < datetime.now():
+            # Calculate end of current month
+            if current_window_start_dt.month == 12:
+                current_window_end_dt = current_window_start_dt.replace(year=current_window_start_dt.year + 1, 
+                                                                      month=1, 
+                                                                      day=1)
+            else:
+                current_window_end_dt = current_window_start_dt.replace(month=current_window_start_dt.month + 1, 
+                                                                      day=1)
+            
+            # Ensure we don't go beyond current time
+            current_window_end_dt = min(current_window_end_dt, datetime.now())
+            
+            # Convert to timestamps for the API
+            current_window_start = int(current_window_start_dt.timestamp())
+            current_window_end = int(current_window_end_dt.timestamp())
+            
+            LOGGER.info(f"Syncing {table} from {current_window_start_dt.strftime('%Y-%m-%d')} "
+                       f"to {current_window_end_dt.strftime('%Y-%m-%d')}")
 
-        sync_failures = False
+            for subscription in self.PARENT_STREAM_INSTANCE.sync_parent_data():
+                subscription_id = subscription["subscription"]["id"]
+                if subscription_id in self._already_checked_subscription:
+                    continue
 
-        for subscription in self.PARENT_STREAM_INSTANCE.sync_parent_data():
-            # Sets the url params
-            subscription_id = subscription["subscription"]["id"]
-            if subscription_id in self._already_checked_subscription:
-                continue
+                params = {
+                    'subscription_id[is]': subscription_id,
+                    'updated_at[after]': current_window_start,
+                    'updated_at[before]': current_window_end
+                }
+                self._already_checked_subscription.append(subscription_id)
 
-            params = {
-                'subscription_id[is]': subscription_id,
-            }
-            self._already_checked_subscription.append(subscription_id)
+                try:
+                    response = self.client.make_request(self.get_url(), api_method, params=params)
+                except Exception as e:
+                    LOGGER.error(f"Error fetching usages for subscription {subscription_id}: {str(e)}")
+                    continue
 
-            # Gets the data
-            try:
-                response = self.client.make_request(self.get_url(), api_method, params=params)
-            except Exception as e:
-                response = {}
+                # Transform dates from timestamp to isoformat
+                for obj in response.get('list', []):
+                    record = obj.get("usage")
+                    for key in ["created_at", "usage_date", "updated_at"]:
+                        if key in record:
+                            record[key] = datetime.fromtimestamp(record[key]).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-            ctr = singer.metrics.record_counter(endpoint=table)
-            # Transform dates from timestamp to isoformat
-            for obj in response.get('list', []):
-                record = obj.get("usage")
-                for key in ["created_at", "usage_date", "updated_at"]:
-                    if key in record:
-                        record[key] = datetime.fromtimestamp(record[key]).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+                    singer.write_records(table, [record])
 
-                singer.write_records(table, [obj.get("usage")])
+                if len(response.get('list', [])) > 0:
+                    with singer.metrics.record_counter(endpoint=table) as ctr:
+                        ctr.increment(amount=len(response.get('list', [])))
 
-            if len(response.get('list', [])) > 0:
-                with singer.metrics.record_counter(endpoint=table) as ctr:
-                    ctr.increment(amount=len(response.get('list', [])))
+            # Move to next window (start of next month)
+            current_window_start_dt = current_window_end_dt
+            
+            # Save state after each window
+            self.state = incorporate(self.state, table, 'bookmark_date', 
+                                   current_window_end_dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
+            save_state(self.state)
+            
+            # Reset checked subscriptions for next window
+            self._already_checked_subscription = []
