@@ -3,7 +3,7 @@ import singer
 from .subscriptions import SubscriptionsStream
 
 from dateutil.parser import parse
-from datetime import datetime
+from datetime import datetime, timedelta
 from tap_framework.config import get_config_start_date
 from tap_chargebee.state import get_last_record_value_for_table, incorporate, \
     save_state
@@ -60,8 +60,9 @@ class UsagesStream(BaseChargebeeStream):
                 current_window_end_dt = current_window_start_dt.replace(month=current_window_start_dt.month + 1, 
                                                                       day=1)
             
-            # Ensure we don't go beyond current time
-            current_window_end_dt = min(current_window_end_dt, datetime.now())
+            # For the last window, extend end date by 1 minute into the future
+            if current_window_end_dt >= datetime.now():
+                current_window_end_dt = datetime.now() + timedelta(seconds=5)
             
             # Convert to timestamps for the API
             current_window_start = int(current_window_start_dt.timestamp())
@@ -105,7 +106,10 @@ class UsagesStream(BaseChargebeeStream):
             current_window_start_dt = current_window_end_dt
             
             # Save state after each window
-            self.state = incorporate(self.state, table, 'bookmark_date', 
+            # If this was the last window, subtract the 5 seconds we added earlier
+            if current_window_end_dt >= datetime.now():
+                current_window_end_dt = current_window_end_dt - timedelta(seconds=5)
+            self.state = incorporate(self.state, table, 'bookmark_date',
                                    current_window_end_dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
             save_state(self.state)
             
