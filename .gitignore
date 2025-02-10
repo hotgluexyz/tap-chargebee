@@ -12,3 +12,5 @@ dist/
 __pycache__/
 .idea
 .secrets
+.venv/
+build/
