@@ -1,6 +1,8 @@
-import datetime
+
 import json
 import singer
+
+from datetime import datetime, timedelta
 
 LOGGER = singer.get_logger()
 
@@ -13,14 +15,22 @@ def get_last_record_value_for_table(state, table, field):
     if last_value is None:
         return None
 
-    return last_value
+    if isinstance(last_value, str):
+        try:
+            last_value = datetime.strptime(last_value, "%Y-%m-%dT%H:%M:%SZ")
+        except ValueError:
+            return last_value  # Return as is if parsing fails
 
+    if isinstance(last_value, datetime):
+        return (last_value + timedelta(seconds=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    return last_value  # Return as is if it's not a datetime object
 
 def incorporate(state, table, key, value, force=False):
     if value is None:
         return state
 
-    if isinstance(value, datetime.datetime):
+    if isinstance(value, datetime):
         value = value.strftime('%Y-%m-%dT%H:%M:%SZ')
 
     if state is None:
