@@ -50,15 +50,23 @@ class UsagesStream(BaseChargebeeStream):
         # Convert bookmarked start date to datetime
         current_window_start_dt = datetime.fromtimestamp(int(bookmark_date.timestamp()))
         
+        batching_requests = True
+        batch_size_in_months = self.config.get("batch_size_in_months")
+        if batch_size_in_months:
+            batch_size_in_months = min(batch_size_in_months, 12)
+        else:
+            batching_requests = False
+
         while current_window_start_dt < datetime.now():
-            # Calculate end of current month
-            if current_window_start_dt.month == 12:
-                current_window_end_dt = current_window_start_dt.replace(year=current_window_start_dt.year + 1, 
-                                                                      month=1, 
-                                                                      day=1)
+            if batching_requests:
+                # Calculate end of current month
+                current_window_end_dt = (current_window_start_dt + timedelta(days=batch_size_in_months * 31)).replace(day=1)
+
+                # Ensure we don't go beyond START_TIMESTAP
+                current_window_end_dt = min(current_window_end_dt, 
+                                        datetime.fromtimestamp(self.START_TIMESTAP))
             else:
-                current_window_end_dt = current_window_start_dt.replace(month=current_window_start_dt.month + 1, 
-                                                                      day=1)
+                current_window_end_dt = datetime.fromtimestamp(self.START_TIMESTAP)
             
             # For the last window, extend end date by 1 minute into the future
             if current_window_end_dt >= datetime.now():
@@ -102,7 +110,7 @@ class UsagesStream(BaseChargebeeStream):
                     with singer.metrics.record_counter(endpoint=table) as ctr:
                         ctr.increment(amount=len(response.get('list', [])))
 
-            # Move to next window (start of next month)
+            # Move to next window
             current_window_start_dt = current_window_end_dt
             
             # Save state after each window
