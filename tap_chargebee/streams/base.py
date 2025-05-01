@@ -173,19 +173,23 @@ class BaseChargebeeStream(BaseStream):
         # Convert bookmarked start date to datetime
         current_window_start_dt = datetime.fromtimestamp(int(bookmark_date.timestamp()))
         
+        batching_requests = True
+        batch_size_in_months = self.config.get("batch_size_in_months")
+        if batch_size_in_months:
+            batch_size_in_months = min(batch_size_in_months, 12)
+        else:
+            batching_requests = False
+
         while math.ceil(current_window_start_dt.timestamp()) < self.START_TIMESTAP:
-            # Calculate end of current month
-            if current_window_start_dt.month == 12:
-                current_window_end_dt = current_window_start_dt.replace(year=current_window_start_dt.year + 1, 
-                                                                      month=1, 
-                                                                      day=1)
+            if batching_requests:
+                # Calculate end of current month
+                current_window_end_dt = (current_window_start_dt + timedelta(days=batch_size_in_months * 31)).replace(day=1)
+
+                # Ensure we don't go beyond START_TIMESTAP
+                current_window_end_dt = min(current_window_end_dt, 
+                                        datetime.fromtimestamp(self.START_TIMESTAP))
             else:
-                current_window_end_dt = current_window_start_dt.replace(month=current_window_start_dt.month + 1, 
-                                                                      day=1)
-            
-            # Ensure we don't go beyond START_TIMESTAP
-            current_window_end_dt = min(current_window_end_dt, 
-                                      datetime.fromtimestamp(self.START_TIMESTAP))
+                current_window_end_dt = datetime.fromtimestamp(self.START_TIMESTAP)
             
             # Convert to timestamps for the API
             current_window_start = int(current_window_start_dt.timestamp())
@@ -289,7 +293,7 @@ class BaseChargebeeStream(BaseStream):
                     params['offset'] = response.get('next_offset')
                     LOGGER.info(f"Advancing by one offset within window [{params}]")
 
-            # Move to next window (start of next month)
+            # Move to next window
             current_window_start_dt = current_window_end_dt
             
             # Save state after each window
