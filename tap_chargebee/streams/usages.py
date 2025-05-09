@@ -68,7 +68,10 @@ class UsagesStream(BaseChargebeeStream):
             LOGGER.info(f"Syncing {table} - Loop {loop_count}, current time: {now.strftime('%Y-%m-%d %H:%M:%S')}")
             
             if batching_requests:
+                # Calculate end of current month
                 current_window_end_dt = (current_window_start_dt + timedelta(days=batch_size_in_months * 31)).replace(day=1)
+
+                # Ensure we don't go beyond START_TIMESTAP
                 current_window_end_dt = min(current_window_end_dt, 
                                         datetime.fromtimestamp(self.START_TIMESTAP))
             else:
