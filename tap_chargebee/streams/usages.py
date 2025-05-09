@@ -57,20 +57,26 @@ class UsagesStream(BaseChargebeeStream):
         else:
             batching_requests = False
 
-        while current_window_start_dt < datetime.now():
+        loop_count = 0
+        now = datetime.now()
+        
+        
+        # Using integer timestamp comparison to avoid precision issues
+        while int(current_window_start_dt.timestamp()) < int(now.timestamp()):  
+            loop_count += 1
+            now = datetime.now()
+            LOGGER.info(f"Syncing {table} - Loop {loop_count}, current time: {now.strftime('%Y-%m-%d %H:%M:%S')}")
+            
             if batching_requests:
-                # Calculate end of current month
                 current_window_end_dt = (current_window_start_dt + timedelta(days=batch_size_in_months * 31)).replace(day=1)
-
-                # Ensure we don't go beyond START_TIMESTAP
                 current_window_end_dt = min(current_window_end_dt, 
                                         datetime.fromtimestamp(self.START_TIMESTAP))
             else:
                 current_window_end_dt = datetime.fromtimestamp(self.START_TIMESTAP)
             
-            # For the last window, extend end date by 1 minute into the future
-            if current_window_end_dt >= datetime.now():
-                current_window_end_dt = datetime.now() + timedelta(seconds=5)
+            # For the last window, extend end date by 5 seconds into the future
+            if current_window_end_dt >= now:
+                current_window_end_dt = now + timedelta(seconds=5)
             
             # Convert to timestamps for the API
             current_window_start = int(current_window_start_dt.timestamp())
@@ -123,3 +129,5 @@ class UsagesStream(BaseChargebeeStream):
             
             # Reset checked subscriptions for next window
             self._already_checked_subscription = []
+        
+        LOGGER.info(f"Completed sync for {table} after {loop_count} iterations")
