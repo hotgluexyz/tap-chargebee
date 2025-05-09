@@ -37,7 +37,7 @@ class CbTransformer(singer.Transformer):
 
 class BaseChargebeeStream(BaseStream):
     ENTITY = None
-    START_TIMESTAP = int(datetime.now().timestamp())
+    START_TIMESTAP = int(datetime.utcnow().timestamp())
 
     def __init__(self, config, state, catalog, client):
         super().__init__(config, state, catalog, client)
