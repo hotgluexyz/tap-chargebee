@@ -47,7 +47,7 @@ class UsagesStream(BaseChargebeeStream):
 
         for subscription in self.PARENT_STREAM_INSTANCE.sync_parent_data():
             subscription_id = subscription['subscription']['id']
-
+            
             offset = None
             while True:
                 params = {
@@ -55,6 +55,7 @@ class UsagesStream(BaseChargebeeStream):
                     'updated_at[after]': int(start_dt.timestamp()),
                     'limit': page_size
                 }
+
                 if offset:
                     params['offset'] = offset
 
@@ -88,3 +89,4 @@ class UsagesStream(BaseChargebeeStream):
         self.state = incorporate(self.state, table, 'bookmark_date', new_bookmark)
         save_state(self.state)
         LOGGER.info(f"Completed sync for {table} up to {new_bookmark}")
+
