@@ -34,100 +34,57 @@ class UsagesStream(BaseChargebeeStream):
 
     def sync_data(self):
         table = self.TABLE
-        api_method = self.API_METHOD
-
-        # Attempt to get the bookmark date from the state file
-        LOGGER.info('Attempting to get the most recent bookmark_date for entity {}.'.format(self.ENTITY))
-        bookmark_date = get_last_record_value_for_table(self.state, table, 'bookmark_date')
-
-        # If there is no bookmark date, fall back to using the start date from the config
-        if bookmark_date is None:
-            LOGGER.info('Could not locate bookmark_date from STATE file. Falling back to start_date from config.json instead.')
-            bookmark_date = get_config_start_date(self.config)
+        # figure out where we left off
+        last_sync = get_last_record_value_for_table(self.state, table, 'bookmark_date')
+        if last_sync:
+            start_dt = parse(last_sync)
         else:
-            bookmark_date = parse(bookmark_date)
+            start_dt = get_config_start_date(self.config)
 
-        # Convert bookmarked start date to datetime
-        current_window_start_dt = datetime.fromtimestamp(int(bookmark_date.timestamp()))
-        
-        batching_requests = True
-        batch_size_in_months = self.config.get("batch_size_in_months")
-        if batch_size_in_months:
-            batch_size_in_months = min(batch_size_in_months, 12)
-        else:
-            batching_requests = False
+        page_size = self.config.get('page_size', 100)
 
-        loop_count = 0
-        now = datetime.now()
-        
-        
-        # Using integer timestamp comparison to avoid precision issues
-        while int(current_window_start_dt.timestamp()) < int(now.timestamp()):  
-            loop_count += 1
-            now = datetime.now()
-            LOGGER.info(f"Syncing {table} - Loop {loop_count}, current time: {now.strftime('%Y-%m-%d %H:%M:%S')}")
-            
-            if batching_requests:
-                current_window_end_dt = (current_window_start_dt + timedelta(days=batch_size_in_months * 31)).replace(day=1)
-                current_window_end_dt = min(current_window_end_dt, 
-                                        datetime.fromtimestamp(self.START_TIMESTAP))
-            else:
-                current_window_end_dt = datetime.fromtimestamp(self.START_TIMESTAP)
-            
-            # For the last window, extend end date by 5 seconds into the future
-            if current_window_end_dt >= now:
-                current_window_end_dt = now + timedelta(seconds=5)
-            
-            # Convert to timestamps for the API
-            current_window_start = int(current_window_start_dt.timestamp())
-            current_window_end = int(current_window_end_dt.timestamp())
-            
-            LOGGER.info(f"Syncing {table} from {current_window_start_dt.strftime('%Y-%m-%d')} "
-                       f"to {current_window_end_dt.strftime('%Y-%m-%d')}")
+        max_updated = start_dt
 
-            for subscription in self.PARENT_STREAM_INSTANCE.sync_parent_data():
-                subscription_id = subscription["subscription"]["id"]
-                if subscription_id in self._already_checked_subscription:
-                    continue
+        for subscription in self.PARENT_STREAM_INSTANCE.sync_parent_data():
+            subscription_id = subscription['subscription']['id']
 
+            offset = None
+            while True:
                 params = {
                     'subscription_id[is]': subscription_id,
-                    'updated_at[after]': current_window_start,
-                    'updated_at[before]': current_window_end
+                    'updated_at[after]': int(start_dt.timestamp()),
+                    'limit': page_size
                 }
-                self._already_checked_subscription.append(subscription_id)
+                if offset:
+                    params['offset'] = offset
 
-                try:
-                    response = self.client.make_request(self.get_url(), api_method, params=params)
-                except Exception as e:
-                    LOGGER.error(f"Error fetching usages for subscription {subscription_id}: {str(e)}")
-                    continue
+                resp = self.client.make_request(self.get_url(), self.API_METHOD, params=params)
+                usage_list = resp.get('list', [])
 
-                # Transform dates from timestamp to isoformat
-                for obj in response.get('list', []):
-                    record = obj.get("usage")
-                    for key in ["created_at", "usage_date", "updated_at"]:
-                        if key in record:
-                            record[key] = datetime.fromtimestamp(record[key]).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+                if not usage_list:
+                    break
 
-                    singer.write_records(table, [record])
+                # write them and track the max updated_at seen
+                records = []
+                for obj in usage_list:
+                    rec = obj['usage']
+                    for key in ('created_at', 'usage_date', 'updated_at'):
+                        if key in rec:
+                            rec[key] = datetime.fromtimestamp(rec[key]).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+                    records.append(rec)
+                    updated = parse(rec['updated_at'])
+                    if updated > max_updated:
+                        max_updated = updated
 
-                if len(response.get('list', [])) > 0:
-                    with singer.metrics.record_counter(endpoint=table) as ctr:
-                        ctr.increment(amount=len(response.get('list', [])))
+                singer.write_records(table, records)
+                singer.metrics.record_counter(endpoint=table).increment(len(records))
 
-            # Move to next window
-            current_window_start_dt = current_window_end_dt
-            
-            # Save state after each window
-            # If this was the last window, subtract the 5 seconds we added earlier
-            if current_window_end_dt >= datetime.now():
-                current_window_end_dt = current_window_end_dt - timedelta(seconds=5)
-            self.state = incorporate(self.state, table, 'bookmark_date',
-                                   current_window_end_dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ"))
-            save_state(self.state)
-            
-            # Reset checked subscriptions for next window
-            self._already_checked_subscription = []
-        
-        LOGGER.info(f"Completed sync for {table} after {loop_count} iterations")
+                # prepare next page
+                offset = resp.get('next_offset')
+                if not offset:
+                    break
+
+        # once all subscriptions are done, persist the farthest‐out updated_at        new_bookmark = max_updated.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        self.state = incorporate(self.state, table, 'bookmark_date', new_bookmark)
+        save_state(self.state)
+        LOGGER.info(f"Completed sync for {table} up to {new_bookmark}")
