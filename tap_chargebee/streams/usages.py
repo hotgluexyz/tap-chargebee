@@ -85,7 +85,9 @@ class UsagesStream(BaseChargebeeStream):
                 if not offset:
                     break
 
-        # once all subscriptions are done, persist the farthest‐out updated_at        new_bookmark = max_updated.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        # once all subscriptions are done, persist the farthest‐out updated_at
+        #    
+        new_bookmark = max_updated.strftime("%Y-%m-%dT%H:%M:%S.%fZ")     
         self.state = incorporate(self.state, table, 'bookmark_date', new_bookmark)
         save_state(self.state)
         LOGGER.info(f"Completed sync for {table} up to {new_bookmark}")
