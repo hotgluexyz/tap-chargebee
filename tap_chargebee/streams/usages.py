@@ -1,9 +1,12 @@
 import singer
+
 from .subscriptions import SubscriptionsStream
+
 from dateutil.parser import parse
 from datetime import datetime, timedelta
 from tap_framework.config import get_config_start_date
-from tap_chargebee.state import get_last_record_value_for_table, incorporate, save_state
+from tap_chargebee.state import get_last_record_value_for_table, incorporate, \
+    save_state
 from tap_chargebee.streams.base import BaseChargebeeStream
 
 LOGGER = singer.get_logger()
