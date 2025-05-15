@@ -33,7 +33,7 @@ class UsagesStream(BaseChargebeeStream):
         self.PARENT_STREAM_INSTANCE = SubscriptionsStream(*args, **kwargs)
 
     def get_url(self):
-        return f"https://{self.config.get('full_site')}/api/v2/usages"
+        return 'https://{}/api/v2/usages'.format(self.config.get('full_site'))
 
     def _fetch_subscription_usages(self, subscription_id, start_dt, end_dt, page_size):
         offset = None
