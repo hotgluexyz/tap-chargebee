@@ -102,6 +102,11 @@ class UsagesStream(BaseChargebeeStream):
 
                 for subscription in self.PARENT_STREAM_INSTANCE.sync_parent_data():
                     subscription_id = subscription['subscription']['id']
+                   
+                    if subscription['subscription'].get('deleted', False):
+                        # LOGGER.info(f"Skipping deleted subscription: {subscription_id}")
+                        continue
+                    
                     updated = self._fetch_subscription_usages(subscription_id, start_dt, end_dt, page_size)
                     if updated > max_updated:
                         max_updated = updated
@@ -110,6 +115,10 @@ class UsagesStream(BaseChargebeeStream):
         else:
             for subscription in self.PARENT_STREAM_INSTANCE.sync_parent_data():
                 subscription_id = subscription['subscription']['id']
+                
+                if subscription['subscription'].get('deleted', False):
+                    # LOGGER.info(f"Skipping deleted subscription: {subscription_id}")
+                    continue
                 updated = self._fetch_subscription_usages(subscription_id, start_dt, now, page_size)
                 if updated > max_updated:
                     max_updated = updated
