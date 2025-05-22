@@ -15,4 +15,4 @@ __pycache__/
 .venv/
 build/
 .DS_Store
-
+.history
