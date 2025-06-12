@@ -237,6 +237,7 @@ class BaseChargebeeStream(BaseStream):
             done = False
             ids = set()
             while not done:
+                max_date = bookmark_date
                 response = self.client.make_request(
                     url=self.get_url(),
                     method=api_method,
@@ -287,6 +288,29 @@ class BaseChargebeeStream(BaseStream):
                     singer.write_records(table, to_write)
                     ctr.increment(amount=len(to_write))
 
+                    # get the max date from the records
+                    if bookmark_key is not None:
+                        for item in to_write:
+                            if item:
+                                if item.get(bookmark_key) is not None:
+                                    try:
+                                        max_date = max(
+                                            max_date,
+                                            parse(item.get(bookmark_key))
+                                        )
+                                    except TypeError:
+                                        max_date = max(
+                                            max_date,
+                                            datetime.fromtimestamp(item.get(bookmark_key), tz=dtz.gettz('UTC')
+                                        ))
+
+                # update the state with the max date after each iteration
+                if bookmark_key is not None:
+                    self.state = incorporate(
+                        self.state, table, 'bookmark_date', max_date)
+                
+                save_state(self.state)
+
                 if not response.get('next_offset'):
                     done = True
                 else:
@@ -295,11 +319,6 @@ class BaseChargebeeStream(BaseStream):
 
             # Move to next window
             current_window_start_dt = current_window_end_dt
-            
-            # Save state after each window
-            self.state = incorporate(self.state, table, 'bookmark_date', 
-                                   current_window_end_dt.replace(tzinfo=dtz.gettz('UTC')))
-            save_state(self.state)
 
     def sync_parent_data(self):
         table = self.TABLE
