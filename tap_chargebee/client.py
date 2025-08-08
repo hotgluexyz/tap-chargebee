@@ -78,11 +78,17 @@ class ChargebeeClient(BaseClient):
             raise Server429Error()
 
         if response.status_code >= 400:
-            if "configuration_incompatible" in response.text and "/price_variants" in url:
-                LOGGER.warn(f"{response.request.url}: {response.text}")
+            try:
+                error_json = response.json()
+                error_msg = error_json.get("error_msg") or error_json.get("message") or "Unknown error"
+            except JSONDecodeError as e:
+                error_msg = response.text
+                LOGGER.warning(f"HTTP {response.status_code} error at {url}: Could not parse JSON error. Raw response: {error_msg}. Exception: {e}")
             else:
-                LOGGER.error("Making {} request to {} with the following params {} got error {}".format(method, url, params, response.text))
-                raise Server4xxError(response.text)
+                 LOGGER.warning(f"HTTP {response.status_code} error at {url}: {error_msg}")
+
+            raise Server4xxError(error_msg)
+
 
         response_json = response.json()
 
