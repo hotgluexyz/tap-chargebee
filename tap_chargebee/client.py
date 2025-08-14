@@ -50,7 +50,7 @@ class ChargebeeClient(BaseClient):
         return params
 
     @backoff.on_exception(backoff.expo,
-                          (Server4xxError, Server429Error, JSONDecodeError, requests.exceptions.Timeout, requests.exceptions.ConnectionError),
+                          (Server4xxError, Server429Error, JSONDecodeError, requests.exceptions.RequestException),
                           max_tries=6,
                           factor=2)
     @utils.ratelimit(100, 60)
