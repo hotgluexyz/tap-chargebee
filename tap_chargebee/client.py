@@ -11,6 +11,8 @@ from tap_framework.client import BaseClient
 
 LOGGER = singer.get_logger()
 
+REQUEST_CONNECT_TIMEOUT = 10
+REQUEST_READ_TIMEOUT = 300
 
 class Server4xxError(Exception):
     pass
@@ -48,7 +50,7 @@ class ChargebeeClient(BaseClient):
         return params
 
     @backoff.on_exception(backoff.expo,
-                          (Server4xxError, Server429Error, JSONDecodeError),
+                          (Server4xxError, Server429Error, JSONDecodeError, requests.exceptions.RequestException),
                           max_tries=6,
                           factor=2)
     @utils.ratelimit(100, 60)
@@ -65,7 +67,9 @@ class ChargebeeClient(BaseClient):
             auth=(self.config.get("api_key"), ''),
             headers=self.get_headers(),
             params=self.get_params(params),
-            json=body)
+            json=body,
+            timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT)
+        )
 
         LOGGER.info(f"Processing response {response.status_code}")
 
