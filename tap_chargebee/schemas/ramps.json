@@ -257,6 +257,236 @@
           }
         }
       ]
+    },
+    "description": {
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    "coupons_to_remove": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "discounts_to_remove": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "discounts_to_add": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": [
+                  "string"
+                ]
+              },
+              "invoice_name": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "type": {
+                "type": [
+                  "string"
+                ]
+              },
+              "percentage": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "amount": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "duration_type": {
+                "type": [
+                  "string"
+                ]
+              },
+              "period": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "period_unit": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "included_in_mrr": {
+                "type": [
+                  "boolean"
+                ]
+              },
+              "apply_on": {
+                "type": [
+                  "string"
+                ]
+              },
+              "item_price_id": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "created_at": {
+                "type": [
+                  "integer"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "item_tiers": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_price_id": {
+                "type": [
+                  "string"
+                ]
+              },
+              "starting_unit": {
+                "type": [
+                  "integer"
+                ]
+              },
+              "ending_unit": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "price": {
+                "type": [
+                  "integer"
+                ]
+              },
+              "starting_unit_in_decimal": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "ending_unit_in_decimal": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "price_in_decimal": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "pricing_type": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "package_size": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "index": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "contract_term": {
+      "type": [
+        "null",
+        "object"
+      ],
+      "properties": {
+        "cancellation_cutoff_period": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "renewal_billing_cycles": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "action_at_term_end": {
+          "type": [
+            "string"
+          ]
+        },
+        "status_transition_reason": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "properties": {
+            "code": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "message": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        }
+      }
     }
   }
 }
