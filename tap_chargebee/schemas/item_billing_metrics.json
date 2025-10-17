@@ -1,0 +1,51 @@
+{
+    "type": ["null", "object"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": ["null", "string"]
+      },
+      "customer_id": {
+        "type": ["null", "string"]
+      },
+      "contract_term_id": {
+        "type": ["null", "string"]
+      },
+      "item_price_id": {
+        "type": ["null", "string"]
+      },
+      "unit_amount_per_billing_cycle": {
+        "type": ["null", "integer"]
+      },
+      "quantity_per_billing_cycle": {
+        "type": ["null", "integer"]
+      },
+      "effective_from": {
+        "type": ["null", "integer"]
+      },
+      "effective_to": {
+        "type": ["null", "integer"]
+      },
+      "total_contract_value": {
+        "type": ["null", "integer"]
+      },
+      "total_tax_amount": {
+        "type": ["null", "integer"]
+      },
+      "total_discount_amount": {
+        "type": ["null", "integer"]
+      },
+      "created_at": {
+        "type": ["null", "integer"]
+      },
+      "modified_at": {
+        "type": ["null", "integer"]
+      },
+      "object": {
+        "type": ["null", "string"]
+      },
+      "subscription_id": {
+        "type": ["null", "string"]
+      }
+    }
+  }
