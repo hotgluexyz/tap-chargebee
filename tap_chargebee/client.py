@@ -37,13 +37,13 @@ class ChargebeeClient(BaseClient):
         if self.config.get('user_agent'):
             headers['User-Agent'] = self.config.get('user_agent')
         
-        if self.config.get('customHeaders'):
-            if not isinstance(self.config.get('customHeaders'), list):
-                raise TypeError("Expected 'customHeaders' in config to be a list if provided")
+        if self.config.get('custom_headers'):
+            if not isinstance(self.config.get('custom_headers'), list):
+                raise TypeError("Expected 'custom_headers' in config to be a list if provided")
             
-            for header in self.config.get('customHeaders'):
+            for header in self.config.get('custom_headers'):
                 if "name" not in header or "value" not in header:
-                    raise TypeError("Expected 'name' and 'value' in 'customHeaders' in config")
+                    raise TypeError("Expected 'name' and 'value' in 'custom_headers' in config")
                 headers[header['name']] = header['value']
 
         return headers
