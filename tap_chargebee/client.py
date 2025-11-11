@@ -68,13 +68,15 @@ class ChargebeeClient(BaseClient):
         if params is None:
             params = {}
 
-        LOGGER.info("Making {} request to {} with the following params {}".format(method, url, params))
+        headers = self.get_headers()
+
+        LOGGER.info(f"Making {method} request to {url} with the following params {params} and custom headers {headers}")
 
         response = requests.request(
             method,
             url,
             auth=(self.config.get("api_key"), ''),
-            headers=self.get_headers(),
+            headers=headers,
             params=self.get_params(params),
             json=body,
             timeout=(REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT)
