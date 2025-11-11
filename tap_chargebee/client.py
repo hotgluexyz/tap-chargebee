@@ -70,7 +70,7 @@ class ChargebeeClient(BaseClient):
 
         headers = self.get_headers()
 
-        LOGGER.info(f"Making {method} request to {url} with the following params {params} and custom headers {headers}")
+        LOGGER.info(f"Making {method} request to {url} with the following params {params} and headers {headers}")
 
         response = requests.request(
             method,
