@@ -180,6 +180,8 @@ class BaseChargebeeStream(BaseStream):
         else:
             batching_requests = False
 
+        previous_max_date = None
+
         while math.ceil(current_window_start_dt.timestamp()) < self.START_TIMESTAP:
             if batching_requests:
                 # Calculate end of current month
@@ -329,11 +331,12 @@ class BaseChargebeeStream(BaseStream):
                                         ))
 
                 # update the state with the max date after each iteration
-                if bookmark_key is not None and not syncing_by_fallback_date:
+                # only update the state if the max date has changed
+                if bookmark_key is not None and not syncing_by_fallback_date and previous_max_date != max_date:
                     self.state = incorporate(
                         self.state, table, 'bookmark_date', max_date)
-                
-                save_state(self.state)
+                    previous_max_date = max_date
+                    save_state(self.state)
 
                 if not response.get('next_offset'):
                     if sync_by_date and not syncing_by_fallback_date and fall_back_date_field:
