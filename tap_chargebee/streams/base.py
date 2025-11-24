@@ -199,6 +199,7 @@ class BaseChargebeeStream(BaseStream):
                        f"to {current_window_end_dt.strftime('%Y-%m-%d')}")
             
             fall_back_date_field = None
+            sync_by_date = False
             # Initialize params based on entity type
             if self.ENTITY == 'event':
                 params = {"occurred_at[after]": current_window_start, "occurred_at[before]": current_window_end}
