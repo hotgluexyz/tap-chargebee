@@ -180,6 +180,8 @@ class BaseChargebeeStream(BaseStream):
         else:
             batching_requests = False
 
+        previous_max_date = None
+
         while math.ceil(current_window_start_dt.timestamp()) < self.START_TIMESTAP:
             if batching_requests:
                 # Calculate end of current month
@@ -198,6 +200,8 @@ class BaseChargebeeStream(BaseStream):
             LOGGER.info(f"Syncing {table} from {current_window_start_dt.strftime('%Y-%m-%d')} "
                        f"to {current_window_end_dt.strftime('%Y-%m-%d')}")
             
+            fall_back_date_field = None
+            sync_by_date = False
             # Initialize params based on entity type
             if self.ENTITY == 'event':
                 params = {"occurred_at[after]": current_window_start, "occurred_at[before]": current_window_end}
@@ -214,7 +218,6 @@ class BaseChargebeeStream(BaseStream):
             elif self.ENTITY == 'transaction':
                 params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end, "sort_by[asc]": "updated_at"}
                 bookmark_key = 'updated_at'
-                sync_by_date = True
             elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
                 params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end, "sort_by[asc]": "updated_at"}
                 bookmark_key = 'updated_at'
@@ -223,6 +226,14 @@ class BaseChargebeeStream(BaseStream):
             else:
                 params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end}
                 bookmark_key = 'updated_at'
+
+            if self.ENTITY in ['transaction', 'credit_note', 'invoice']:
+                fall_back_date_field = 'date'
+                sync_by_date = True
+            
+            if self.ENTITY in ['coupon', 'customer', 'subscription']:
+                fall_back_date_field = 'created_at'
+                sync_by_date = True
 
             # Apply additional filters if configured
             if self.config.get("filters"):
@@ -236,6 +247,17 @@ class BaseChargebeeStream(BaseStream):
             # Process current window
             done = False
             ids = set()
+            syncing_by_fallback_date = False  # Add flag to prevent infinite loop
+            
+            # records updated before `datetime_to_sync_by_date` do not have `updated_at` set,
+            # so if the sync window is on or before this date we'll sync by fallback date field
+            # else we only sync by updated_at
+            datetime_to_sync_by_date = datetime(2016, 9, 30)
+            if sync_by_date and \
+                current_window_start_dt > datetime_to_sync_by_date and \
+                current_window_end_dt > datetime_to_sync_by_date:
+                sync_by_date = False
+
             while not done:
                 max_date = bookmark_date
                 response = self.client.make_request(
@@ -250,6 +272,12 @@ class BaseChargebeeStream(BaseStream):
 
                 records = response.get('list', [])
                 to_write = self.get_stream_data(records)
+
+                if self.ENTITY in ['transaction', 'credit_note', 'invoice',
+                                    'coupon', 'customer', 'subscription']:
+                    # store ids to clean duplicates
+                    to_write = [record for record in to_write if record["id"] not in ids]
+                    ids.update([record["id"] for record in to_write])
 
                 if self.ENTITY == 'event':
                     for event in to_write:
@@ -268,10 +296,6 @@ class BaseChargebeeStream(BaseStream):
                 if self.ENTITY == 'coupon':
                     for coupon in Util.coupons:
                         to_write.append(coupon)
-                if self.ENTITY == 'transaction':
-                    # store ids to clean duplicates
-                    to_write = [record for record in to_write if record["id"] not in ids]
-                    ids.update([trans["id"] for trans in to_write])
                 if self.ENTITY == 'business_entity':
                     filtered_records = []
                     for record in to_write:
@@ -289,7 +313,9 @@ class BaseChargebeeStream(BaseStream):
                     ctr.increment(amount=len(to_write))
 
                     # get the max date from the records
-                    if bookmark_key is not None:
+                    # if we're syncing by fallback date we don't wanna update
+                    # the bookmark date because it can become inconsistent
+                    if bookmark_key is not None and not syncing_by_fallback_date:
                         for item in to_write:
                             if item:
                                 if item.get(bookmark_key) is not None:
@@ -305,14 +331,26 @@ class BaseChargebeeStream(BaseStream):
                                         ))
 
                 # update the state with the max date after each iteration
-                if bookmark_key is not None:
+                # only update the state if the max date has changed
+                if bookmark_key is not None and not syncing_by_fallback_date and previous_max_date != max_date:
                     self.state = incorporate(
                         self.state, table, 'bookmark_date', max_date)
-                
-                save_state(self.state)
+                    previous_max_date = max_date
+                    save_state(self.state)
 
                 if not response.get('next_offset'):
-                    done = True
+                    if sync_by_date and not syncing_by_fallback_date and fall_back_date_field:
+                        params = {
+                            f"{fall_back_date_field}[after]": current_window_start,
+                            f"{fall_back_date_field}[before]": current_window_end,
+                            "sort_by[asc]": fall_back_date_field
+                        }
+                        sync_by_date = False
+                        syncing_by_fallback_date = True
+                        LOGGER.info(f"Attempting to sync by {fall_back_date_field}.")
+                    else:
+                        LOGGER.info("Final offset reached. Ending sync.")
+                        done = True
                 else:
                     params['offset'] = response.get('next_offset')
                     LOGGER.info(f"Advancing by one offset within window [{params}]")
