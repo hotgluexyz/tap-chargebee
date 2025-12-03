@@ -85,6 +85,72 @@
     },
     "meta_data": {
       "type": ["null", "string"]
+    },
+    "item_constraints": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["null", "object"],
+        "properties": {
+          "constraint": {
+            "type": ["null", "string"]
+          },
+          "item_type": {
+            "type": ["null", "string"]
+          },
+          "item_price_ids":{
+            "type": ["null", "array"],
+            "items": {
+              "type": ["null", "string"]
+            }
+          }
+        }
+      }
+    },
+    "item_constraint_criteria": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["null", "object"],
+        "properties": {
+          "item_type": {
+            "type": ["null", "string"]
+          },
+          "currencies": {
+            "type": ["null", "array"],
+            "items": {
+              "type": ["null", "string"]
+            }
+          },
+          "item_family_ids": {
+            "type": ["null", "array"],
+            "items": {
+              "type": ["null", "string"]
+            }
+          },
+          "item_price_periods": {
+            "type": ["null", "array"],
+            "items": {
+              "type": ["null", "string"]
+            }
+          }
+        }
+      }
+    },
+    "coupon_constraints": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["null", "object"],
+        "properties": {
+          "entity_type": {
+            "type": ["null", "string"]
+          },
+          "type": {
+            "type": ["null", "string"]
+          },
+          "value": {
+            "type": ["null", "string"]
+          }
+        }
+      }
     }
   }
 }
