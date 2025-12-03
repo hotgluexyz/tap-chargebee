@@ -317,7 +317,7 @@
 	            "type": ["null", "string"]
 	          },
 	          "tax_rate": {
-	            "type": ["null", "integer"]
+	            "type": ["null", "number"]
 	          },
 	          "is_partial_tax_applied": {
 	            "type": ["null", "boolean"]
