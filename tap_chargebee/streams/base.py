@@ -277,7 +277,7 @@ class BaseChargebeeStream(BaseStream):
                                     'coupon', 'customer', 'subscription']:
                     # store ids to clean duplicates
                     to_write = [record for record in to_write if f"{record['id']}_{record.get('deleted')}" not in ids]
-                    ids.update([f"{record['id']}_{record.get('deleted', '')}" for record in to_write])
+                    ids.update([f"{record['id']}_{record.get('date', record.get('created_at', ''))}" for record in to_write])
 
                 if self.ENTITY == 'event':
                     for event in to_write:
