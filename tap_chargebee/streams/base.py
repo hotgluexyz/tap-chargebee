@@ -276,8 +276,8 @@ class BaseChargebeeStream(BaseStream):
                 if self.ENTITY in ['transaction', 'credit_note', 'invoice',
                                     'coupon', 'customer', 'subscription']:
                     # store ids to clean duplicates
-                    to_write = [record for record in to_write if record["id"] not in ids]
-                    ids.update([record["id"] for record in to_write])
+                    to_write = [record for record in to_write if f"{record['id']}_{record.get('date', record.get('created_at', ''))}" not in ids]
+                    ids.update([f"{record['id']}_{record.get('date', record.get('created_at', ''))}" for record in to_write])
 
                 if self.ENTITY == 'event':
                     for event in to_write:
@@ -412,8 +412,9 @@ class BaseChargebeeStream(BaseStream):
             for record in records:
                 # clean duplicate values for transactions
                 if self.ENTITY == 'transaction':
-                    if record["id"] not in ids:
-                        ids.add(record["id"])
+                    composite_id = f"{record['id']}_{record.get('date', record.get('created_at', ''))}"
+                    if composite_id not in ids:
+                        ids.add(composite_id)
                     else:
                         continue
                 yield record
