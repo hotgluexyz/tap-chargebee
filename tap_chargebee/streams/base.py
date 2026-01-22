@@ -154,6 +154,9 @@ class BaseChargebeeStream(BaseStream):
         entity = self.ENTITY
         return [self.transform_record(item.get(entity)) for item in data]
 
+    def get_deduplication_key(self, record):
+        record_date = record.get('generated_at', record.get('created_at', record.get('date', '')))
+        return f"{record['id']}_{record_date}_{record.get('deleted', False)}"
 
     def sync_data(self):
         table = self.TABLE
@@ -276,8 +279,8 @@ class BaseChargebeeStream(BaseStream):
                 if self.ENTITY in ['transaction', 'credit_note', 'invoice',
                                     'coupon', 'customer', 'subscription']:
                     # store ids to clean duplicates
-                    to_write = [record for record in to_write if f"{record['id']}_{record.get('date', record.get('created_at', ''))}" not in ids]
-                    ids.update([f"{record['id']}_{record.get('date', record.get('created_at', ''))}" for record in to_write])
+                    to_write = [record for record in to_write if self.get_deduplication_key(record) not in ids]
+                    ids.update([self.get_deduplication_key(record) for record in to_write])
 
                 if self.ENTITY == 'event':
                     for event in to_write:
