@@ -46,6 +46,12 @@
       },
       "subscription_id": {
         "type": ["null", "string"]
+      },
+      "invoice_level_discount_amount": {
+        "type": ["null", "integer"]
+      },
+      "item_level_discount_amount": {
+        "type": ["null", "integer"]
       }
     }
   }
