@@ -219,10 +219,10 @@ class BaseChargebeeStream(BaseStream):
                 params = {"created_at[after]": current_window_start, "created_at[before]": current_window_end}
                 bookmark_key = 'created_at'
             elif self.ENTITY == 'transaction':
-                params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end, "sort_by[asc]": "updated_at"}
+                params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end}
                 bookmark_key = 'updated_at'
             elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
-                params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end, "sort_by[asc]": "updated_at"}
+                params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end}
                 bookmark_key = 'updated_at'
                 if self.ENTITY in ['invoice'] and self.config.get('exclude_zero_invoices'):
                     params['total[is_not]'] = 0
@@ -246,6 +246,9 @@ class BaseChargebeeStream(BaseStream):
                     
             if self.config.get('include_deprecated') is True and self.TABLE in ['customers', 'subscriptions']:
                 params["include_deprecated"] = "true"
+            
+            if hasattr(self, 'SORT_BY'):
+                params['sort_by[asc]'] = self.SORT_BY
 
             # Process current window
             done = False
@@ -389,14 +392,17 @@ class BaseChargebeeStream(BaseStream):
         elif self.ENTITY == 'promotional_credit':
             params = {"created_at[after]": bookmark_date_posix, "created_at[before]": self.START_TIMESTAP}
         elif self.ENTITY == 'transaction':
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
+            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
             sync_by_date = True
         elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP, "sort_by[asc]": "updated_at"}
+            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
             if self.ENTITY in ['invoice'] and self.config.get('exclude_zero_invoices'):
                 params['total[is_not]'] = 0
         else:
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
+        
+        if hasattr(self, 'SORT_BY'):
+            params['sort_by[asc]'] = self.SORT_BY
 
         LOGGER.info("Querying {} starting at {}".format(table, bookmark_date))
 
