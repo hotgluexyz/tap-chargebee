@@ -12,6 +12,7 @@ class CouponsStream(BaseChargebeeStream):
     VALID_REPLICATION_KEYS = ['updated_at']
     INCLUSION = 'available'
     API_METHOD = 'GET'
+    SORT_BY = 'created_at' 
 
 
     def get_url(self):

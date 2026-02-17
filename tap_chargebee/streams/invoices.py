@@ -14,6 +14,7 @@ class InvoicesStream(BaseChargebeeStream):
     VALID_REPLICATION_KEYS = ['updated_at']
     INCLUSION = 'available'
     API_METHOD = 'GET'
+    SORT_BY = 'updated_at'
 
     def get_url(self):
         return 'https://{}/api/v2/invoices'.format(self.config.get('full_site'))

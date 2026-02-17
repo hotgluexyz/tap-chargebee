@@ -30,6 +30,7 @@ class UsagesStream(BaseChargebeeStream):
     API_METHOD = 'GET'
     _already_checked_subscription = []
     sync_data_for_child_stream = True
+    SORT_BY = 'usage_date'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -46,7 +47,8 @@ class UsagesStream(BaseChargebeeStream):
                 'subscription_id[is]': subscription_id,
                 'updated_at[after]': int(start_dt.timestamp()),
                 'updated_at[before]': int(end_dt.timestamp()),
-                'limit': page_size
+                'limit': page_size,
+                'sort_by[asc]': self.SORT_BY
             }
             if offset:
                 params['offset'] = offset
