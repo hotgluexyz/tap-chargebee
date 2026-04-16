@@ -226,9 +226,6 @@ class BaseChargebeeStream(BaseStream):
                 bookmark_key = 'updated_at'
                 if self.ENTITY in ['invoice'] and self.config.get('exclude_zero_invoices'):
                     params['total[is_not]'] = 0
-            elif self.ENTITY == 'item_billing_metric':
-                params = {"modified_at[after]": current_window_start, "modified_at[before]": current_window_end}
-                bookmark_key = 'modified_at'
             else:
                 params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end}
                 bookmark_key = 'updated_at'
@@ -401,8 +398,6 @@ class BaseChargebeeStream(BaseStream):
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
             if self.ENTITY in ['invoice'] and self.config.get('exclude_zero_invoices'):
                 params['total[is_not]'] = 0
-        elif self.ENTITY == 'item_billing_metric':
-            params = {"modified_at[after]": bookmark_date_posix, "modified_at[before]": self.START_TIMESTAP}
         else:
             params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
         

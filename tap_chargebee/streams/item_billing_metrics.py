@@ -12,7 +12,6 @@ class ItemBillingMetricsStream(BaseChargebeeStream):
     VALID_REPLICATION_KEYS = ['modified_at']
     INCLUSION = 'available'
     API_METHOD = 'GET'
-    SORT_BY = 'modified_at'
 
     def get_url(self):
         return 'https://{}/api/v2/item_billing_metrics'.format(self.config.get('full_site'))
