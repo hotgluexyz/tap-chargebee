@@ -52,6 +52,15 @@
       },
       "item_level_discount_amount": {
         "type": ["null", "integer"]
+      },
+      "contract_created_at": {
+        "type": ["null", "integer"]
+      },
+      "contract_start": {
+        "type": ["null", "integer"]
+      },
+      "contract_end": {
+        "type": ["null", "integer"]
       }
     }
   }
