@@ -42,16 +42,21 @@ class BaseChargebeeStream(BaseStream):
     def __init__(self, config, state, catalog, client):
         super().__init__(config, state, catalog, client)
 
-        # Only do this if it's a scheduled job and use_end_date is set as True
-        use_end_date = config.get("use_end_date", True) # true as default
-        if config.get("timezone") and os.environ.get("SCHEDULED_JOB") and use_end_date:
-            # Calculate yesterday based on the timezone set in the tap-chargebee config
-            timezone = config["timezone"]
-            tz = dtz.gettz(timezone)
-            yesterday = datetime.now(tz) - timedelta(days=1)
-            # set the endDate to 11:59:59 yesterday
-            end_date = yesterday.replace(hour=23, minute=59, second=59)
-            # update the start_timestamp
+        if not self.config.get("end_date", False):
+            # Only do this if it's a scheduled job and use_end_date is set as True
+            use_end_date = config.get("use_end_date", True) # true as default
+            if config.get("timezone") and os.environ.get("SCHEDULED_JOB") and use_end_date:
+                # Calculate yesterday based on the timezone set in the tap-chargebee config
+                timezone = config["timezone"]
+                tz = dtz.gettz(timezone)
+                yesterday = datetime.now(tz) - timedelta(days=1)
+                # set the endDate to 11:59:59 yesterday
+                end_date = yesterday.replace(hour=23, minute=59, second=59)
+                # update the start_timestamp
+                self.START_TIMESTAP = int(end_date.timestamp())
+        else:
+            end_date = self.config.get("end_date")
+            end_date = parse(end_date)
             self.START_TIMESTAP = int(end_date.timestamp())
 
 
