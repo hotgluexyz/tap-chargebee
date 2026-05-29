@@ -55,10 +55,12 @@ class BaseChargebeeStream(BaseStream):
                 # update the start_timestamp
                 self.START_TIMESTAP = int(end_date.timestamp())
         else:
-            end_date = self.config.get("end_date")
-            end_date = parse(end_date)
+            end_date = parse(self.config.get("end_date"))
+            if self.config.get("start_date"):
+                start_date = parse(self.config.get("start_date"))
+                assert end_date > start_date, "end_date must be greater than start_date"
+                
             self.START_TIMESTAP = int(end_date.timestamp())
-
 
     def write_schema(self):
         singer.write_schema(
