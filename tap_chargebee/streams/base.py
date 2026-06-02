@@ -37,7 +37,7 @@ class CbTransformer(singer.Transformer):
 
 class BaseChargebeeStream(BaseStream):
     ENTITY = None
-    START_TIMESTAP = int(datetime.utcnow().timestamp())
+    END_TIMESTAMP = int(datetime.utcnow().timestamp())
 
     def __init__(self, config, state, catalog, client):
         super().__init__(config, state, catalog, client)
@@ -52,15 +52,16 @@ class BaseChargebeeStream(BaseStream):
                 yesterday = datetime.now(tz) - timedelta(days=1)
                 # set the endDate to 11:59:59 yesterday
                 end_date = yesterday.replace(hour=23, minute=59, second=59)
-                # update the start_timestamp
-                self.START_TIMESTAP = int(end_date.timestamp())
+                self.END_TIMESTAMP = int(end_date.timestamp())
         else:
             end_date = parse(self.config.get("end_date"))
             if self.config.get("start_date"):
                 start_date = parse(self.config.get("start_date"))
-                assert end_date > start_date, "end_date must be greater than start_date"
-                
-            self.START_TIMESTAP = int(end_date.timestamp())
+                if end_date.timestamp() <= start_date.timestamp():
+                    raise ValueError(
+                        f"end_date ({end_date.date()}) must be after start_date ({start_date.date()})"
+                    )
+            self.END_TIMESTAMP = int(end_date.timestamp())
 
     def write_schema(self):
         singer.write_schema(
@@ -192,16 +193,22 @@ class BaseChargebeeStream(BaseStream):
 
         previous_max_date = None
 
-        while math.ceil(current_window_start_dt.timestamp()) < self.START_TIMESTAP:
+        if bookmark_date and int(bookmark_date.timestamp()) >= self.END_TIMESTAMP:
+            LOGGER.warning(
+                "end_date is at or before the current bookmark (%s); no records will be synced.",
+                bookmark_date.isoformat(),
+            )
+
+        while math.ceil(current_window_start_dt.timestamp()) < self.END_TIMESTAMP:
             if batching_requests:
                 # Calculate end of current month
                 current_window_end_dt = (current_window_start_dt + timedelta(days=batch_size_in_months * 31)).replace(day=1)
 
-                # Ensure we don't go beyond START_TIMESTAP
-                current_window_end_dt = min(current_window_end_dt, 
-                                        datetime.fromtimestamp(self.START_TIMESTAP))
+                # Ensure we don't go beyond END_TIMESTAMP
+                current_window_end_dt = min(current_window_end_dt,
+                                        datetime.fromtimestamp(self.END_TIMESTAMP))
             else:
-                current_window_end_dt = datetime.fromtimestamp(self.START_TIMESTAP)
+                current_window_end_dt = datetime.fromtimestamp(self.END_TIMESTAMP)
             
             # Convert to timestamps for the API
             current_window_start = int(current_window_start_dt.timestamp())
@@ -395,18 +402,18 @@ class BaseChargebeeStream(BaseStream):
         
         # Create params for filtering
         if self.ENTITY == 'event':
-            params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.START_TIMESTAP}
+            params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.END_TIMESTAMP}
         elif self.ENTITY == 'promotional_credit':
-            params = {"created_at[after]": bookmark_date_posix, "created_at[before]": self.START_TIMESTAP}
+            params = {"created_at[after]": bookmark_date_posix, "created_at[before]": self.END_TIMESTAMP}
         elif self.ENTITY == 'transaction':
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
+            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.END_TIMESTAMP}
             sync_by_date = True
         elif self.ENTITY in ['customer', 'invoice', 'unbilled_charge']:
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
+            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.END_TIMESTAMP}
             if self.ENTITY in ['invoice'] and self.config.get('exclude_zero_invoices'):
                 params['total[is_not]'] = 0
         else:
-            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.START_TIMESTAP}
+            params = {"updated_at[after]": bookmark_date_posix, "updated_at[before]": self.END_TIMESTAMP}
         
         if hasattr(self, 'SORT_BY'):
             params['sort_by[asc]'] = self.SORT_BY
