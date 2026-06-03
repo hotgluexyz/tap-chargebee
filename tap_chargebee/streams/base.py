@@ -54,7 +54,12 @@ class BaseChargebeeStream(BaseStream):
                 end_date = yesterday.replace(hour=23, minute=59, second=59)
                 self.END_TIMESTAMP = int(end_date.timestamp())
         else:
-            end_date = parse(self.config.get("end_date"))
+            raw_end_date = self.config.get("end_date")
+            end_date = parse(raw_end_date)
+            # Date-only strings have no time component; normalize to end-of-day so
+            # the full calendar day is included. Explicit times are left as-is.
+            if "T" not in raw_end_date and ":" not in raw_end_date:
+                end_date = end_date.replace(hour=23, minute=59, second=59)
             if self.config.get("start_date"):
                 start_date = parse(self.config.get("start_date"))
                 if end_date.timestamp() <= start_date.timestamp():
@@ -397,9 +402,16 @@ class BaseChargebeeStream(BaseStream):
         # Convert bookmarked start date to POSIX.
         bookmark_date_posix = int(bookmark_date.timestamp())
 
+        if bookmark_date_posix >= self.END_TIMESTAMP:
+            LOGGER.warning(
+                "end_date is at or before the current bookmark (%s); no records will be synced.",
+                bookmark_date.isoformat(),
+            )
+            return
+
         sync_by_date = False
         date_sync_attempted = False  # Add flag to prevent infinite loop
-        
+
         # Create params for filtering
         if self.ENTITY == 'event':
             params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.END_TIMESTAMP}
