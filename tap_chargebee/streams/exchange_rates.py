@@ -1,7 +1,6 @@
 from tap_chargebee.streams.base import BaseChargebeeStream
 import singer
 from tap_framework.config import get_config_start_date
-from dateutil.parser import parse
 import dateutil.tz as dtz
 from tap_chargebee.state import incorporate, save_state
 from datetime import datetime, timedelta
@@ -37,12 +36,8 @@ class ExchangeRatesStream(BaseChargebeeStream):
                 start = start.replace(tzinfo=dtz.UTC)
             return start.astimezone(tz).date()
 
-        last_synced = parse(last_value)
-        if last_synced.tzinfo is None:
-            last_synced = last_synced.replace(tzinfo=dtz.UTC)
-
-        # exchange_rate_date is day-granular; resume the day after the last sync
-        return last_synced.astimezone(tz).date() + timedelta(days=1)
+        last_synced = datetime.strptime(last_value, '%Y-%m-%d').date()
+        return last_synced + timedelta(days=1)
 
     def get_stream_data(self, data):
         # response is a dictionary with rates per date, map the fields to match other forex taps
@@ -63,7 +58,7 @@ class ExchangeRatesStream(BaseChargebeeStream):
         LOGGER.info('Attempting to get the most recent bookmark_date for entity {}.'.format(self.ENTITY))
         tz = self.TIMEZONE
         current_date = self._get_bookmark_start_date()
-        end_date = datetime.fromtimestamp(self.END_TIMESTAMP, tz=tz).date()
+        end_date = datetime.fromtimestamp(self.END_TIMESTAMP).date()
 
         while current_date <= end_date:
             start_date = current_date.strftime('%Y-%m-%d')
