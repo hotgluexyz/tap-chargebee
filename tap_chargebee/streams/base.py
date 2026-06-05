@@ -54,6 +54,11 @@ class BaseChargebeeStream(BaseStream):
             # update the start_timestamp
             self.START_TIMESTAP = int(end_date.timestamp())
 
+    def _get_sync_tz(self):
+        timezone = self.config.get("timezone")
+        if timezone:
+            return dtz.gettz(timezone)
+        return dtz.UTC
 
     def write_schema(self):
         singer.write_schema(

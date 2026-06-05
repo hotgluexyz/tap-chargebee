@@ -2,7 +2,8 @@ from tap_chargebee.streams.base import BaseChargebeeStream
 import singer
 from tap_framework.config import get_config_start_date
 from dateutil.parser import parse
-from tap_chargebee.state import get_last_record_value_for_table, incorporate, save_state
+import dateutil.tz as dtz
+from tap_chargebee.state import incorporate, save_state
 from datetime import datetime, timedelta
 
 LOGGER = singer.get_logger()
@@ -22,6 +23,27 @@ class ExchangeRatesStream(BaseChargebeeStream):
     def get_url(self):
         return 'https://{}/api/v2/currencies/get_auto_exchange_rates'.format(self.config.get('full_site'))
 
+    def _get_bookmark_start_date(self):
+        """Return the first calendar day to request on this sync run."""
+        tz = self._get_sync_tz()
+        last_value = self.state.get('bookmarks', {}).get(self.TABLE, {}).get('bookmark_date')
+        if last_value is None:
+            LOGGER.info(
+                'Could not locate bookmark_date from STATE file. '
+                'Falling back to start_date from config.json instead.'
+            )
+            start = get_config_start_date(self.config)
+            if start.tzinfo is None:
+                start = start.replace(tzinfo=dtz.UTC)
+            return start.astimezone(tz).date()
+
+        last_synced = parse(last_value)
+        if last_synced.tzinfo is None:
+            last_synced = last_synced.replace(tzinfo=dtz.UTC)
+
+        # exchange_rate_date is day-granular; resume the day after the last sync
+        return last_synced.astimezone(tz).date() + timedelta(days=1)
+
     def get_stream_data(self, data):
         # response is a dictionary with rates per date, map the fields to match other forex taps
         data = data['exchange_rates']
@@ -39,34 +61,31 @@ class ExchangeRatesStream(BaseChargebeeStream):
         bookmark_key = "date"
 
         LOGGER.info('Attempting to get the most recent bookmark_date for entity {}.'.format(self.ENTITY))
-        bookmark_date = get_last_record_value_for_table(self.state, table, 'bookmark_date')
+        tz = self._get_sync_tz()
+        current_date = self._get_bookmark_start_date()
+        end_date = datetime.fromtimestamp(self.START_TIMESTAP, tz=tz).date()
 
-        # If there is no bookmark date, fall back to using the start date from the config
-        if bookmark_date is None:
-            LOGGER.info('Could not locate bookmark_date from STATE file. Falling back to start_date from config.json instead.')
-            bookmark_date = get_config_start_date(self.config)
-        else:
-            bookmark_date = parse(bookmark_date)
-
-        # Convert bookmarked start date to datetime
-        current_window_start_dt = int(bookmark_date.timestamp())
-        
-        while current_window_start_dt < self.START_TIMESTAP:
-            start_date = datetime.fromtimestamp(current_window_start_dt).strftime('%Y-%m-%d')
+        while current_date <= end_date:
+            start_date = current_date.strftime('%Y-%m-%d')
             LOGGER.info(f"Syncing {table} for {start_date}")
             params = {"exchange_rate_date": start_date}
-            response = self.client.make_request(
-                url=self.get_url(),
-                method=api_method,
-                params=params)
 
-            to_write = self.get_stream_data(response)
+            try:
+                response = self.client.make_request(
+                    url=self.get_url(),
+                    method=api_method,
+                    params=params)
+            except:
+                response = {}
 
-            with singer.metrics.record_counter(endpoint=table) as ctr:
-                singer.write_records(table, to_write)
-                ctr.increment(amount=len(to_write))
+            if response:
+                to_write = self.get_stream_data(response)
 
-            max_date = datetime.fromtimestamp(current_window_start_dt)
+                with singer.metrics.record_counter(endpoint=table) as ctr:
+                    singer.write_records(table, to_write)
+                    ctr.increment(amount=len(to_write))
+
+            max_date = datetime.combine(current_date, datetime.min.time())
 
             # update the state with the max date after each iteration
             # only update the state if the max date has changed
@@ -75,5 +94,4 @@ class ExchangeRatesStream(BaseChargebeeStream):
                     self.state, table, 'bookmark_date', max_date)
                 save_state(self.state)
 
-            # Move to next day
-            current_window_start_dt = int((max_date + timedelta(days=1)).timestamp())
+            current_date = current_date + timedelta(days=1)
