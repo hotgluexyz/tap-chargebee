@@ -25,7 +25,7 @@ class ExchangeRatesStream(BaseChargebeeStream):
 
     def _get_bookmark_start_date(self):
         """Return the first calendar day to request on this sync run."""
-        tz = self._get_sync_tz()
+        tz = self.TIMEZONE
         last_value = self.state.get('bookmarks', {}).get(self.TABLE, {}).get('bookmark_date')
         if last_value is None:
             LOGGER.info(
@@ -61,9 +61,9 @@ class ExchangeRatesStream(BaseChargebeeStream):
         bookmark_key = "date"
 
         LOGGER.info('Attempting to get the most recent bookmark_date for entity {}.'.format(self.ENTITY))
-        tz = self._get_sync_tz()
+        tz = self.TIMEZONE
         current_date = self._get_bookmark_start_date()
-        end_date = datetime.fromtimestamp(self.START_TIMESTAP, tz=tz).date()
+        end_date = datetime.fromtimestamp(self.END_TIMESTAMP, tz=tz).date()
 
         while current_date <= end_date:
             start_date = current_date.strftime('%Y-%m-%d')
