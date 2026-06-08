@@ -80,11 +80,10 @@ class ExchangeRatesStream(BaseChargebeeStream):
                     singer.write_records(table, to_write)
                     ctr.increment(amount=len(to_write))
 
-            # update the state with the max date after each iteration
-            # only update the state if the max date has changed
-            if bookmark_key is not None:
-                self.state = incorporate(
-                    self.state, table, 'bookmark_date', current_date.strftime('%Y-%m-%d'))
-                save_state(self.state)
+                # update the state with the max date after each iteration
+                # only update the state if the max date has changed
+                if to_write and bookmark_key is not None:
+                    self.state = incorporate(self.state, table, 'bookmark_date', current_date.strftime('%Y-%m-%d'))
+                    save_state(self.state)
 
             current_date = current_date + timedelta(days=1)
