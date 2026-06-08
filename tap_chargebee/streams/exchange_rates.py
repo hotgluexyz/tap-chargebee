@@ -4,6 +4,7 @@ from tap_framework.config import get_config_start_date
 import dateutil.tz as dtz
 from tap_chargebee.state import incorporate, save_state
 from datetime import datetime, timedelta
+from tap_chargebee.client import NotAvailableExchangeRateError
 
 LOGGER = singer.get_logger()
 
@@ -70,7 +71,8 @@ class ExchangeRatesStream(BaseChargebeeStream):
                     url=self.get_url(),
                     method=api_method,
                     params=params)
-            except:
+            except NotAvailableExchangeRateError:
+                LOGGER.warning(f"Exchange rate for this date is not available yet")
                 response = {}
 
             if response:

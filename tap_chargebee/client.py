@@ -22,6 +22,12 @@ class Server429Error(Exception):
     pass
 
 
+class UnauthorizedError(Exception):
+    pass
+
+class NotAvailableExchangeRateError(Exception):
+    pass
+
 class ChargebeeClient(BaseClient):
 
     def __init__(self, config, api_result_limit=100):
@@ -91,12 +97,16 @@ class ChargebeeClient(BaseClient):
             LOGGER.info(f"Status code 429. Sleeping for {sleep_time} seconds.")
             time.sleep(int(sleep_time))
             raise Server429Error()
+        
+        if response.status_code == 401:
+            error = response.json().get("message", "Invalid API key provided")
+            raise UnauthorizedError(error)
 
         if response.status_code >= 400:
             if "exchange_rates" in url:
                 if "Exchange rate date passed should not be greater than yesterday's date." in response.text or "Exchange rates for the date passed are not available. Please contact support to get this fixed." in response.text:
                     LOGGER.warning(f"Exchange rate for this date is not available yet")
-                    return {}
+                    raise NotAvailableExchangeRateError()
                 
             if "configuration_incompatible" in response.text and "/price_variants" in url:
                 LOGGER.warning(f"{response.request.url}: {response.text}")
