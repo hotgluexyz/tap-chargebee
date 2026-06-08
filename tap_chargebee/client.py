@@ -93,6 +93,11 @@ class ChargebeeClient(BaseClient):
             raise Server429Error()
 
         if response.status_code >= 400:
+            if "exchange_rates" in url:
+                if "Exchange rate date passed should not be greater than yesterday's date." in response.text or "Exchange rates for the date passed are not available. Please contact support to get this fixed." in response.text:
+                    LOGGER.warning(f"Exchange rate for this date is not available yet")
+                    return {}
+                
             if "configuration_incompatible" in response.text and "/price_variants" in url:
                 LOGGER.warning(f"{response.request.url}: {response.text}")
             else:

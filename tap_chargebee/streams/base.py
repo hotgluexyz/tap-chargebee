@@ -38,6 +38,7 @@ class CbTransformer(singer.Transformer):
 class BaseChargebeeStream(BaseStream):
     ENTITY = None
     END_TIMESTAMP = int(datetime.utcnow().timestamp())
+    TIMEZONE = dtz.gettz('UTC')
 
     def __init__(self, config, state, catalog, client):
         super().__init__(config, state, catalog, client)
@@ -49,6 +50,7 @@ class BaseChargebeeStream(BaseStream):
                 # Calculate yesterday based on the timezone set in the tap-chargebee config
                 timezone = config["timezone"]
                 tz = dtz.gettz(timezone)
+                self.TIMEZONE = tz
                 yesterday = datetime.now(tz) - timedelta(days=1)
                 # set the endDate to 11:59:59 yesterday
                 end_date = yesterday.replace(hour=23, minute=59, second=59)

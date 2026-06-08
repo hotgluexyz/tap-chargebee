@@ -23,6 +23,7 @@ from .usages import UsagesStream
 from .ramps import RampsStream
 from .price_variants import PriceVariantsStream
 from .item_billing_metrics import ItemBillingMetricsStream
+from .exchange_rates import ExchangeRatesStream
 
 AVAILABLE_STREAMS = [
     EventsStream,
@@ -54,7 +55,8 @@ AVAILABLE_STREAMS_2_0_ONLY = [
     ItemFamiliesStream,
     PriceVariantsStream,
     RampsStream,
-    ItemBillingMetricsStream
+    ItemBillingMetricsStream,
+    ExchangeRatesStream
 ]
 
 AVAILABLE_STREAMS_1_0 = AVAILABLE_STREAMS + AVAILABLE_STREAMS_1_0_ONLY

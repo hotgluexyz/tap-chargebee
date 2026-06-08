@@ -1,0 +1,16 @@
+{
+  "type": ["null", "object"],
+  "additionalProperties": false,
+  "properties": {
+    "date": {
+      "type": ["null", "string"],
+      "format": "date"
+    },
+    "base": {
+      "type": ["null", "string"]
+    },
+    "rates": {
+      "type": ["null", "string", "object"]
+    }
+  }
+}
