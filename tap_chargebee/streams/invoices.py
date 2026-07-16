@@ -82,7 +82,9 @@ class InvoicesStream(BaseChargebeeStream):
         LOGGER.info(
             f"Successfully retrieved all {len(collected['line_items'])} line items, "
             f"{len(collected['line_item_discounts'])} line_item_discounts, "
-            f"{len(collected['line_item_taxes'])} line_item_taxes for invoice {record['id']}"
+            f"{len(collected['line_item_taxes'])} line_item_taxes, "
+            f"{len(collected['line_item_tiers'])} line_item_tiers "
+            f"for invoice {record['id']}"
         )
 
         return record
