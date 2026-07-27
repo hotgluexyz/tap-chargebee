@@ -236,6 +236,9 @@ class BaseChargebeeStream(BaseStream):
                         event_types = [event.strip() for event in event_types]
                     params.update({"event_type[in]": str(event_types)})
                 bookmark_key = 'occurred_at'
+            elif self.ENTITY in ['billing_metric_line', 'billing_metric_breakdown']:
+                params = {"occurred_at[after]": current_window_start, "occurred_at[before]": current_window_end}
+                bookmark_key = 'occurred_at'
             elif self.ENTITY == 'promotional_credit':
                 params = {"created_at[after]": current_window_start, "created_at[before]": current_window_end}
                 bookmark_key = 'created_at'
@@ -416,6 +419,8 @@ class BaseChargebeeStream(BaseStream):
 
         # Create params for filtering
         if self.ENTITY == 'event':
+            params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.END_TIMESTAMP}
+        elif self.ENTITY in ['billing_metric_line', 'billing_metric_breakdown']:
             params = {"occurred_at[after]": bookmark_date_posix, "occurred_at[before]": self.END_TIMESTAMP}
         elif self.ENTITY == 'promotional_credit':
             params = {"created_at[after]": bookmark_date_posix, "created_at[before]": self.END_TIMESTAMP}

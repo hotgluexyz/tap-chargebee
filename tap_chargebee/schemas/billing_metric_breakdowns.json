@@ -1,0 +1,65 @@
+{
+  "type": ["null", "object"],
+  "additionalProperties": false,
+  "properties": {
+    "object": {
+      "type": ["null", "string"]
+    },
+    "subscription_id": {
+      "type": ["null", "string"]
+    },
+    "customer_id": {
+      "type": ["null", "string"]
+    },
+    "lineage_id": {
+      "type": ["null", "string"]
+    },
+    "version": {
+      "type": ["null", "integer"]
+    },
+    "line_item_id": {
+      "type": ["null", "string"]
+    },
+    "line_item_code": {
+      "type": ["null", "string"]
+    },
+    "line_item_type": {
+      "type": ["null", "string"]
+    },
+    "billing_doc_id": {
+      "type": ["null", "string"]
+    },
+    "billing_doc_type": {
+      "type": ["null", "string"]
+    },
+    "occurred_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "allocated_amount": {
+      "type": ["null", "integer"]
+    },
+    "total_amount": {
+      "type": ["null", "integer"]
+    },
+    "date_from": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "date_to": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "deleted": {
+      "type": ["null", "boolean"]
+    },
+    "created_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "type": ["null", "object"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": ["null", "string"]
+    },
+    "object": {
+      "type": ["null", "string"]
+    },
+    "subscription_id": {
+      "type": ["null", "string"]
+    },
+    "customer_id": {
+      "type": ["null", "string"]
+    },
+    "contract_term_id": {
+      "type": ["null", "string"]
+    },
+    "discounts": {
+      "type": ["null", "array"],
+      "items": {
+        "type": ["null", "object"],
+        "properties": {
+          "code": {
+            "type": ["null", "string"]
+          },
+          "allocated_amount": {
+            "type": ["null", "integer"]
+          },
+          "type": {
+            "type": ["null", "string"]
+          },
+          "apply_on": {
+            "type": ["null", "string"]
+          },
+          "start_date": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          },
+          "end_date": {
+            "type": ["null", "string"],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "item_price_id": {
+      "type": ["null", "string"]
+    },
+    "lineage_id": {
+      "type": ["null", "string"]
+    },
+    "version": {
+      "type": ["null", "integer"]
+    },
+    "occurred_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "effective_from": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "effective_to": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "unit_price_per_billing_cycle": {
+      "type": ["null", "string"]
+    },
+    "quantity_per_billing_cycle": {
+      "type": ["null", "string"]
+    },
+    "billing_period": {
+      "type": ["null", "integer"]
+    },
+    "billing_period_unit": {
+      "type": ["null", "string"]
+    },
+    "currency": {
+      "type": ["null", "string"]
+    },
+    "total_contract_value_before_tax": {
+      "type": ["null", "integer"]
+    },
+    "total_tax_amount": {
+      "type": ["null", "integer"]
+    },
+    "deleted": {
+      "type": ["null", "boolean"]
+    },
+    "created_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    }
+  }
+}
