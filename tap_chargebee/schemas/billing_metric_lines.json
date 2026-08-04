@@ -2,9 +2,6 @@
   "type": ["null", "object"],
   "additionalProperties": false,
   "properties": {
-    "id": {
-      "type": ["null", "string"]
-    },
     "object": {
       "type": ["null", "string"]
     },
@@ -16,6 +13,18 @@
     },
     "contract_term_id": {
       "type": ["null", "string"]
+    },
+    "contract_created_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "contract_start": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "contract_end": {
+      "type": ["null", "string"],
+      "format": "date-time"
     },
     "discounts": {
       "type": ["null", "array"],
