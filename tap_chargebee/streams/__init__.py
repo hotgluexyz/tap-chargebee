@@ -45,7 +45,8 @@ AVAILABLE_STREAMS = [
     BusinessEntitiesStream,
     UsagesStream,
     BillingMetricLinesStream,
-    BillingMetricBreakdownsStream,
+    #create a tag for billing_metric_lines only
+    #BillingMetricBreakdownsStream,
 ]
 
 AVAILABLE_STREAMS_1_0_ONLY = [
