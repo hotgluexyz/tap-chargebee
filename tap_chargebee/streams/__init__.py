@@ -44,7 +44,6 @@ AVAILABLE_STREAMS = [
     InvoicedUnbilledChargesStream,
     BusinessEntitiesStream,
     UsagesStream,
-    # TODO: confirm whether these are PC 2.0-only.
     BillingMetricLinesStream,
     BillingMetricBreakdownsStream,
 ]
