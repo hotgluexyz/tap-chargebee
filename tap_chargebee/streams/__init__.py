@@ -24,6 +24,8 @@ from .ramps import RampsStream
 from .price_variants import PriceVariantsStream
 from .item_billing_metrics import ItemBillingMetricsStream
 from .exchange_rates import ExchangeRatesStream
+from .billing_metric_lines import BillingMetricLinesStream
+from .billing_metric_breakdowns import BillingMetricBreakdownsStream
 
 AVAILABLE_STREAMS = [
     EventsStream,
@@ -41,7 +43,10 @@ AVAILABLE_STREAMS = [
     UnbilledChargesStream,
     InvoicedUnbilledChargesStream,
     BusinessEntitiesStream,
-    UsagesStream
+    UsagesStream,
+    BillingMetricLinesStream,
+    #create a tag for billing_metric_lines only
+    #BillingMetricBreakdownsStream,
 ]
 
 AVAILABLE_STREAMS_1_0_ONLY = [
