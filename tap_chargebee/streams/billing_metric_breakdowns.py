@@ -6,8 +6,7 @@ class BillingMetricBreakdownsStream(BaseChargebeeStream):
     ENTITY = 'billing_metric_breakdown'
     REPLICATION_METHOD = 'INCREMENTAL'
     REPLICATION_KEY = 'updated_at'
-    # No id from API; minimal unique key from live data.
-    KEY_PROPERTIES = ['lineage_id', 'version', 'line_item_id', 'line_item_type']
+    KEY_PROPERTIES = ['lineage_id', 'version', 'line_item_id', 'billing_doc_id']
     BOOKMARK_PROPERTIES = ['updated_at']
     SELECTED_BY_DEFAULT = True
     VALID_REPLICATION_KEYS = ['updated_at']
