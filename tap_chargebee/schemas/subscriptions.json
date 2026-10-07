@@ -205,6 +205,9 @@
     "business_entity_id": {
       "type": ["null", "string"]
     },
+    "brand_id": {
+      "type": ["null", "string"]
+    },
     "addons": {
       "type": ["null", "array"],
       "items": {
