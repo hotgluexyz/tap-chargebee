@@ -93,6 +93,9 @@
     "business_entity_id": {
       "type": ["null", "string"]
     },
+    "brand_id": {
+      "type": ["null", "string"]
+    },
     "create_reason_code": {
       "type": ["null", "string"]
     },
