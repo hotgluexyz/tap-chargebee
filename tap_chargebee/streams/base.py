@@ -239,6 +239,9 @@ class BaseChargebeeStream(BaseStream):
             elif self.ENTITY == 'promotional_credit':
                 params = {"created_at[after]": current_window_start, "created_at[before]": current_window_end}
                 bookmark_key = 'created_at'
+            elif self.ENTITY == 'billing_metric_entitlement':
+                params = {"occurred_at[after]": current_window_start, "occurred_at[before]": current_window_end}
+                bookmark_key = 'occurred_at'
             elif self.ENTITY == 'transaction':
                 params = {"updated_at[after]": current_window_start, "updated_at[before]": current_window_end}
                 bookmark_key = 'updated_at'
