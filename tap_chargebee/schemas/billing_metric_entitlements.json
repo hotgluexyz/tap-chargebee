@@ -1,0 +1,62 @@
+{
+  "type": ["null", "object"],
+  "additionalProperties": false,
+  "properties": {
+    "object": {
+      "type": ["null", "string"]
+    },
+    "subscription_id": {
+      "type": ["null", "string"]
+    },
+    "customer_id": {
+      "type": ["null", "string"]
+    },
+    "item_price_id": {
+      "type": ["null", "string"]
+    },
+    "line_lineage_id": {
+      "type": ["null", "string"]
+    },
+    "entitlement_lineage_id": {
+      "type": ["null", "string"]
+    },
+    "version": {
+      "type": ["null", "integer"]
+    },
+    "unit_id": {
+      "type": ["null", "string"]
+    },
+    "unit_type": {
+      "type": ["null", "string"]
+    },
+    "entitlement_value": {
+      "type": ["null", "string"]
+    },
+    "entitlement_name": {
+      "type": ["null", "string"]
+    },
+    "occurred_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "effective_from": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "effective_to": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "deleted": {
+      "type": ["null", "boolean"]
+    },
+    "created_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    }
+  }
+}
