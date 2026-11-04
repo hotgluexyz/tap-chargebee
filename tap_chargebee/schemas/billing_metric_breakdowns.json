@@ -42,6 +42,9 @@
     "total_amount": {
       "type": ["null", "integer"]
     },
+    "credit_note_reason_code": {
+      "type": ["null", "string"]
+    }
     "date_from": {
       "type": ["null", "string"],
       "format": "date-time"
