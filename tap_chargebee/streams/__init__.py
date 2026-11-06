@@ -27,6 +27,7 @@ from .exchange_rates import ExchangeRatesStream
 from .billing_metric_lines import BillingMetricLinesStream
 from .billing_metric_breakdowns import BillingMetricBreakdownsStream
 from .billing_metric_entitlements import BillingMetricEntitlementsStream
+from .grant_blocks import GrantBlocksStream
 
 AVAILABLE_STREAMS = [
     EventsStream,
@@ -48,6 +49,7 @@ AVAILABLE_STREAMS = [
     BillingMetricLinesStream,
     BillingMetricBreakdownsStream,
     BillingMetricEntitlementsStream,
+    GrantBlocksStream,
 ]
 
 AVAILABLE_STREAMS_1_0_ONLY = [
