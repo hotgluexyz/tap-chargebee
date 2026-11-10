@@ -21,6 +21,7 @@ class GrantBlocksStream(BaseChargebeeStream):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.PARENT_STREAM_INSTANCE = SubscriptionsStream(*args, **kwargs)
+        self.synced_with_subscriptions = False
 
     def get_url(self):
         return (
@@ -56,18 +57,27 @@ class GrantBlocksStream(BaseChargebeeStream):
             yield subscription_ids
 
     def sync_data(self):
+        if self.synced_with_subscriptions:
+            return
+
         for subscription_ids in self.get_subscription_batches():
-            params = {'subscription_id[in]': json.dumps(subscription_ids)}
-            while True:
-                response = self.client.make_request(
-                    self.get_url(), self.API_METHOD, params=params)
-                records = self.get_stream_data(response.get('list', []))
+            self.sync_subscription_batch(subscription_ids)
 
-                with singer.metrics.record_counter(
-                        endpoint=self.TABLE) as counter:
-                    singer.write_records(self.TABLE, records)
-                    counter.increment(amount=len(records))
+    def sync_subscription_batch(self, subscription_ids):
+        params = {'subscription_id[in]': json.dumps(subscription_ids)}
+        while True:
+            response = self.client.make_request(
+                self.get_url(), self.API_METHOD, params=params)
+            records = self.get_stream_data(response.get('list', []))
 
-                if not response.get('next_offset'):
-                    break
-                params['offset'] = response['next_offset']
+            with singer.metrics.record_counter(
+                    endpoint=self.TABLE) as counter:
+                singer.write_records(self.TABLE, records)
+                counter.increment(amount=len(records))
+
+            next_offset = response.get('next_offset')
+            if not next_offset:
+                break
+            if next_offset == params.get('offset'):
+                raise RuntimeError('Grant block pagination did not advance')
+            params['offset'] = next_offset

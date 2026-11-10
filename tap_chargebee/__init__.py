@@ -19,8 +19,8 @@ class ChargebeeRunner(tap_framework.Runner):
         if (subscriptions is not None and grant_blocks is not None
                 and 'grant_blocks_subscription_ids' not in self.config):
             grant_blocks.PARENT_STREAM_INSTANCE = subscriptions
-            subscriptions.sync_for_grant_blocks = True
-            # Populate the parent IDs before grant blocks, in either catalog order.
+            subscriptions.grant_blocks_stream = grant_blocks
+            # Sync grant blocks during the subscription scan, in either order.
             if streams.index(subscriptions) > streams.index(grant_blocks):
                 streams.remove(grant_blocks)
                 streams.insert(streams.index(subscriptions) + 1, grant_blocks)
