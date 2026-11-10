@@ -1,0 +1,90 @@
+{
+  "type": ["null", "object"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": ["null", "string"]
+    },
+    "object": {
+      "type": ["null", "string"]
+    },
+    "subscription_id": {
+      "type": ["null", "string"]
+    },
+    "unit_id": {
+      "type": ["null", "string"]
+    },
+    "unit_type": {
+      "type": ["null", "string"]
+    },
+    "account_type": {
+      "type": ["null", "string"]
+    },
+    "effective_from": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "status": {
+      "type": ["null", "string"]
+    },
+    "grant_source": {
+      "type": ["null", "string"]
+    },
+    "billed_amount": {
+      "type": ["null", "string"]
+    },
+    "is_rollover": {
+      "type": ["null", "boolean"]
+    },
+    "created_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "modified_at": {
+      "type": ["null", "string"],
+      "format": "date-time"
+    },
+    "resource_version": {
+      "type": ["null", "integer"]
+    },
+    "billing_metadata": {
+      "type": ["null", "string"]
+    },
+    "provisioned_block_balance": {
+      "type": ["null", "object"],
+      "properties": {
+        "object": {
+          "type": ["null", "string"]
+        },
+        "granted_amount": {
+          "type": ["null", "string"]
+        },
+        "total_balance": {
+          "type": ["null", "string"]
+        },
+        "usable_balance": {
+          "type": ["null", "string"]
+        },
+        "hold_amount": {
+          "type": ["null", "string"]
+        },
+        "used_amount": {
+          "type": ["null", "string"]
+        },
+        "expired_amount": {
+          "type": ["null", "string"]
+        },
+        "rolled_over_amount": {
+          "type": ["null", "string"]
+        },
+        "voided_amount": {
+          "type": ["null", "string"]
+        }
+      }
+    }
+  }
+}
