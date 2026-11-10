@@ -7,7 +7,25 @@ LOGGER = singer.get_logger()
 
 
 class ChargebeeRunner(tap_framework.Runner):
-    pass
+    def get_streams_to_replicate(self):
+        streams = super().get_streams_to_replicate()
+        subscriptions = next(
+            (stream for stream in streams if stream.TABLE == 'subscriptions'),
+            None)
+        grant_blocks = next(
+            (stream for stream in streams if stream.TABLE == 'grant_blocks'),
+            None)
+
+        if (subscriptions is not None and grant_blocks is not None
+                and 'grant_blocks_subscription_ids' not in self.config):
+            grant_blocks.PARENT_STREAM_INSTANCE = subscriptions
+            subscriptions.sync_for_grant_blocks = True
+            # Populate the parent IDs before grant blocks, in either catalog order.
+            if streams.index(subscriptions) > streams.index(grant_blocks):
+                streams.remove(grant_blocks)
+                streams.insert(streams.index(subscriptions) + 1, grant_blocks)
+
+        return streams
 
 
 @singer.utils.handle_top_exception(LOGGER)

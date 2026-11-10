@@ -3,6 +3,7 @@ import json
 import singer
 
 from tap_chargebee.streams.base import BaseChargebeeStream
+from tap_chargebee.streams.subscriptions import SubscriptionsStream
 
 
 class GrantBlocksStream(BaseChargebeeStream):
@@ -16,6 +17,10 @@ class GrantBlocksStream(BaseChargebeeStream):
     INCLUSION = 'available'
     API_METHOD = 'GET'
     SUBSCRIPTION_BATCH_SIZE = 100
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.PARENT_STREAM_INSTANCE = SubscriptionsStream(*args, **kwargs)
 
     def get_url(self):
         return (
@@ -39,29 +44,16 @@ class GrantBlocksStream(BaseChargebeeStream):
                     start:start + self.SUBSCRIPTION_BATCH_SIZE]
             return
 
-        url = 'https://{}/api/v2/subscriptions'.format(
-            self.config.get('full_site'))
-        # Grant blocks can change without the subscription changing.
-        # Always scan all subscriptions, independently of their bookmark
-        # and date filters.
-        params = {}
-        if self.config.get('include_deprecated') is True:
-            params['include_deprecated'] = 'true'
+        subscription_ids = []
+        for item in self.PARENT_STREAM_INSTANCE.sync_parent_data(
+                full_refresh=True):
+            subscription_ids.append(item['subscription']['id'])
+            if len(subscription_ids) == self.SUBSCRIPTION_BATCH_SIZE:
+                yield subscription_ids
+                subscription_ids = []
 
-        while True:
-            response = self.client.make_request(
-                url, self.API_METHOD, params=params)
-            subscription_ids = [
-                item['subscription']['id']
-                for item in response.get('list', [])]
-            for start in range(
-                    0, len(subscription_ids), self.SUBSCRIPTION_BATCH_SIZE):
-                yield subscription_ids[
-                    start:start + self.SUBSCRIPTION_BATCH_SIZE]
-
-            if not response.get('next_offset'):
-                break
-            params['offset'] = response['next_offset']
+        if subscription_ids:
+            yield subscription_ids
 
     def sync_data(self):
         for subscription_ids in self.get_subscription_batches():
