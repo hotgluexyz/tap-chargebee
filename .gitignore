@@ -16,3 +16,6 @@ __pycache__/
 build/
 .DS_Store
 .history
+
+__smoke-tests__/**/test_runtime/
+__smoke-tests__/unsanitized_*_test/

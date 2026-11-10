@@ -1,0 +1,14 @@
+{
+  "bookmarks": {
+    "credit_notes": { "bookmark_date": "2025-02-08T10:13:00Z" },
+    "customers": { "bookmark_date": "2025-02-08T23:00:39Z" },
+    "invoices": { "bookmark_date": "2025-02-08T23:00:39Z" },
+    "payment_sources": { "bookmark_date": "2025-02-07T15:21:27Z" },
+    "subscriptions": { "bookmark_date": "2025-02-08T23:00:43Z" },
+    "transactions": { "bookmark_date": "2025-02-08T23:00:39Z" },
+    "business_entities": { "bookmark_date": "2025-01-15T12:22:43Z" },
+    "item_prices": { "bookmark_date": "2025-02-07T15:15:24Z" },
+    "item_families": { "bookmark_date": "2025-02-07T15:36:56Z" },
+    "items": { "bookmark_date": "2025-02-07T15:40:01Z" }
+  }
+}
