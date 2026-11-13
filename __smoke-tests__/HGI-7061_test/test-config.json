@@ -1,0 +1,25 @@
+{
+  "filter_query_parameters": [
+    "updated_at[before]",
+    "sort_by[asc]"
+  ],
+  "sort_config": {
+    "customers": [
+      "id"
+    ],
+    "invoices": [
+      "id"
+    ],
+    "subscriptions": [
+      "id"
+    ],
+    "items": [
+      "id"
+    ],
+    "item_prices": [
+      "id"
+    ]
+  },
+  "freeze_time": "2025-02-19 00:00:00",
+  "skip_duplicate_validation": true
+}

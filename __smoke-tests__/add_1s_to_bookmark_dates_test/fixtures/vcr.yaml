@@ -1,0 +1,537 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.20.0
+    method: GET
+    uri: https://fake-site.chargebee.com/api/v2/customers?updated_at%5Bafter%5D=1739055640&updated_at%5Bbefore%5D=1739283563&sort_by%5Basc%5D=updated_at&limit=100&include_deleted=True
+  response:
+    body:
+      string: '{"list": [{"customer": {"id": "-Fallback-scrubbed-EEGQNHzqQAqXwjXlolXJaoHJIBpipCDhLUuM",
+        "first_name": "Fake-Kristen", "last_name": "Fake-Mack", "email": "fake.keithjones@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1733811196, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739142021, "locale":
+        "-Fallback-scrubbed-Zftkm", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 3022, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-iNhumKHmR",
+        "city": "Fake-East Victoriaville", "state": "-Fallback-scrubbed-rEgGERW",
+        "country": "-Fallback-scrubbed-fC", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT",
+        "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-LHP",
+        "mrr": 4039, "primary_payment_source_id": "-Fallback-scrubbed-vcGqTKFFfxYMBWdJVN",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-qcSnPTJoZUZnyyHvxyQDYRoQNCalatgiTFR",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-hXnIu",
+        "cs_t_c": true}, "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway":
+        "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "ref_tx_id": "-Fallback-scrubbed-xsRoyqEjXVDFFNIr", "first_name": "Fake-Kimberly",
+        "last_name": "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1733811197, "updated_at": 1733811197, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 6009, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-EEGQNHzqQAqXwjXlolXJaoHJIBpipCDhLUuM",
+        "payment_source_id": "-Fallback-scrubbed-vcGqTKFFfxYMBWdJVN"}}, {"customer":
+        {"id": "-Fallback-scrubbed-KdIBkErWbVXiZNMqcXAGcxdyptVulYTJLWcC", "first_name":
+        "Fake-John", "last_name": "Fake-John", "email": "fake.johnsontamara@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1734685964, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739142041, "locale":
+        "-Fallback-scrubbed-Zftkm", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 1732, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-mxZmEUwWdVUV",
+        "line2": "-Fallback-scrubbed-IADgAThDfFIWvKm", "city": "Fake-East Cynthiahaven",
+        "state": "-Fallback-scrubbed-CJUSgQO", "country": "-Fallback-scrubbed-mz",
+        "zip": "21186", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT", "object":
+        "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-LHP",
+        "mrr": 1857, "primary_payment_source_id": "-Fallback-scrubbed-qgrmhKhtkLmchKUCoVZY",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-UKjpAnbTPfoAFFwjAfVEdQgtBwmUkybrXwnxp",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-hXnIu"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-LExaGYMJzpVhMGZk", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1734685964, "updated_at": 1734685964, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 8377, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-KdIBkErWbVXiZNMqcXAGcxdyptVulYTJLWcC",
+        "payment_source_id": "-Fallback-scrubbed-qgrmhKhtkLmchKUCoVZY"}}, {"customer":
+        {"id": "-Fallback-scrubbed-iAhowcYnNrLVFxfzTATDSvLLGUBGbjaRDtDQ", "first_name":
+        "Fake-Kathryn", "last_name": "Fake-Oliver", "email": "fake.jaredsalazar@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739172767, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739172768, "locale":
+        "-Fallback-scrubbed-kLSMJ", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 6396, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-VAVmENgYmyHoxQG",
+        "line2": "-Fallback-scrubbed-dotvbauvt", "city": "Fake-Longville", "state_code":
+        "-Fallback-scrubbed-yL", "state": "Fake-Longville", "country": "-Fallback-scrubbed-qe",
+        "zip": "30316", "validation_status": "-Fallback-scrubbed-UnYBSqniyZbAJKf",
+        "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-vNA",
+        "mrr": 8100, "primary_payment_source_id": "-Fallback-scrubbed-bBJbYhrvbQwWXBCTZfW",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-fpyCDfXsngbOnGFjDThXIiytomSaocXLKqdcTDTZdFKmeILS",
+        "gateway": "-Fallback-scrubbed-ylvqkX", "gateway_account_id": "-Fallback-scrubbed-aeIICpBYxgzOHjyOiKS",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-euxbbzqPQN",
+        "cf_brand": "-Fallback-scrubbed-UiO", "cf_locale": "-Fallback-scrubbed-fmgMbotdTtz"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-ylvqkX",
+        "gateway_account_id": "-Fallback-scrubbed-aeIICpBYxgzOHjyOiKS", "iin": "-Fallback-scrubbed-zxbmRm",
+        "last4": "2470", "card_type": "-Fallback-scrubbed-gMhB", "funding_type": "-Fallback-scrubbed-zdVbCR",
+        "expiry_month": 9126, "expiry_year": 3661, "issuing_country": "-Fallback-scrubbed-qe",
+        "created_at": 1739172768, "updated_at": 1739172768, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-MUGxrWBlMYSGhA", "resource_version": 1170,
+        "object": "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-BUejMSHKrfBIrdee",
+        "customer_id": "-Fallback-scrubbed-iAhowcYnNrLVFxfzTATDSvLLGUBGbjaRDtDQ",
+        "payment_source_id": "-Fallback-scrubbed-bBJbYhrvbQwWXBCTZfW"}}, {"customer":
+        {"id": "-Fallback-scrubbed-tRwsymviUwxUxTLZkxycRYKhrYmvvlhQCLzV", "first_name":
+        "Fake-Crystal", "last_name": "Fake-Jackson", "email": "fake.mendozajacob@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739174860, "created_from_ip": "-Fallback-scrubbed-OJtXkFemEgfq",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739174860, "locale":
+        "-Fallback-scrubbed-KhmlC", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 1138, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-dSsJkHaIqskcBhHpI",
+        "line2": "-Fallback-scrubbed-HiwaheCAmIdJ", "city": "Fake-East Jefferyborough",
+        "state_code": "-Fallback-scrubbed-xq", "state": "-Fallback-scrubbed-kQrwykFdhEHZm",
+        "country": "-Fallback-scrubbed-Cw", "zip": "98984", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT",
+        "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-ttB",
+        "mrr": 3940, "primary_payment_source_id": "-Fallback-scrubbed-aIhnWhFBgwZamMYirQk",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-CvxrJguKGvFNuJrxzjGnoVKUerqrEwuXLpz",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-QxRtY"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-xmGyKnMbwsBMqMDA", "first_name": "Fake-Crystal", "iin":
+        "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB", "funding_type":
+        "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year": 2322,
+        "billing_addr2": "-Fallback-scrubbed-ca", "billing_city": "-Fallback-scrubbed-ca",
+        "billing_country": "-Fallback-scrubbed-ca", "billing_zip": "-Fallback-scrubbed-ca",
+        "created_at": 1739174860, "updated_at": 1739174860, "ip_address": "-Fallback-scrubbed-OJtXkFemEgfq",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 2944, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-tRwsymviUwxUxTLZkxycRYKhrYmvvlhQCLzV",
+        "payment_source_id": "-Fallback-scrubbed-aIhnWhFBgwZamMYirQk"}}, {"customer":
+        {"id": "-Fallback-scrubbed-oAQrTStHZRwUqwnhTdDsKDxTzbkHDrbeJFlK", "email":
+        "fake.jamesjenkins@example.com", "auto_collection": "-Fallback-scrubbed-PW",
+        "net_term_days": 1857, "allow_direct_debit": true, "created_at": 1738939829,
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739177192, "locale":
+        "-Fallback-scrubbed-KhmlC", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 7748, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "card_status": "-Fallback-scrubbed-qZLXUcH",
+        "balances": [{"promotional_credits": 1857, "excess_payments": 1857, "refundable_credits":
+        1857, "unbilled_charges": 2059, "object": "-Fallback-scrubbed-VlySjAmpfiqAesuh",
+        "currency_code": "-Fallback-scrubbed-LHP", "balance_currency_code": "-Fallback-scrubbed-LHP"}],
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 2059, "preferred_currency_code": "-Fallback-scrubbed-LHP",
+        "mrr": 8747, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe"}}, {"customer":
+        {"id": "-Fallback-scrubbed-BOyjhMIGb", "email": "fake.ysanders@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1738339175, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739178898, "pii_cleared":
+        "-Fallback-scrubbed-HZDqmk", "channel": "-Fallback-scrubbed-TKU", "resource_version":
+        2215, "deleted": false, "object": "-Fallback-scrubbed-DdFzwkXx", "card_status":
+        "-Fallback-scrubbed-XeIiB", "promotional_credits": 1857, "refundable_credits":
+        1857, "excess_payments": 1857, "unbilled_charges": 1857, "preferred_currency_code":
+        "-Fallback-scrubbed-ttB", "mrr": 1909, "primary_payment_source_id": "-Fallback-scrubbed-KbmblSgmMSHiaeWdaSd",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-BQCfGHqBKsXCtNoUMTMQ",
+        "gateway": "-Fallback-scrubbed-ixhGdFBrk", "gateway_account_id": "-Fallback-scrubbed-sygAhOrSqBFJnTcnitz",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-siTCc", "cf_locale": "-Fallback-scrubbed-sTgezmPzGbb"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-ixhGdFBrk",
+        "gateway_account_id": "-Fallback-scrubbed-sygAhOrSqBFJnTcnitz", "iin": "6151",
+        "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB", "funding_type": "-Fallback-scrubbed-zdVbCR",
+        "expiry_month": 9126, "expiry_year": 1190, "created_at": 1738339188, "updated_at":
+        1738339188, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM", "resource_version":
+        2700, "object": "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-BOyjhMIGb", "payment_source_id": "-Fallback-scrubbed-KbmblSgmMSHiaeWdaSd"}},
+        {"customer": {"id": "-Fallback-scrubbed-yzwjILWTsnCPZKSLeqLufdENuurgOWQBvnFq",
+        "first_name": "Fake-Alexander", "last_name": "Fake-Oconnor", "email": "fake.iperez@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739180075, "created_from_ip": "-Fallback-scrubbed-OJtXkFemEgfq",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739180076, "locale":
+        "-Fallback-scrubbed-Zftkm", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 9358, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-NOtqwNpbBlXxLxT",
+        "city": "Fake-Gallegosbury", "state_code": "-Fallback-scrubbed-wz", "state":
+        "-Fallback-scrubbed-JNHcMNyptQBNo", "country": "-Fallback-scrubbed-qe", "zip":
+        "14059", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT", "object":
+        "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-LHP",
+        "mrr": 3444, "primary_payment_source_id": "-Fallback-scrubbed-bASFghUDiiUubLsMnq",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-HMayoFhIHBVmKutOwXMjEkjgMMjywZPetQsr",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-hXnIu"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-gOyqHIGrxUCRTnQE", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1739180076, "updated_at": 1739180076, "ip_address": "-Fallback-scrubbed-OJtXkFemEgfq",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 1928, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-yzwjILWTsnCPZKSLeqLufdENuurgOWQBvnFq",
+        "payment_source_id": "-Fallback-scrubbed-bASFghUDiiUubLsMnq"}}, {"customer":
+        {"id": "-Fallback-scrubbed-eofobelmVEKoAhlnyxWTPpTxfinNqZBWdToM", "first_name":
+        "Fake-Robert", "last_name": "Fake-Guzman", "email": "fake.thompsonbenjamin@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739180280, "created_from_ip": "-Fallback-scrubbed-OJtXkFemEgfq",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739180281, "locale":
+        "-Fallback-scrubbed-Zftkm", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 2019, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-NOtqwNpbBlXxLxT",
+        "city": "Fake-Gallegosbury", "state_code": "-Fallback-scrubbed-wz", "state":
+        "-Fallback-scrubbed-JNHcMNyptQBNo", "country": "-Fallback-scrubbed-qe", "zip":
+        "14059", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT", "object":
+        "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-LHP",
+        "mrr": 3444, "primary_payment_source_id": "-Fallback-scrubbed-MfsluVmcVQwKhqOQsjx",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-owhYnWmyeIfFAvGdrWuQoNiOsALXetYKFyIj",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-hXnIu"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-kBXeEyHmjmXzYXoa", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1739180281, "updated_at": 1739180281, "ip_address": "-Fallback-scrubbed-OJtXkFemEgfq",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 6362, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-eofobelmVEKoAhlnyxWTPpTxfinNqZBWdToM",
+        "payment_source_id": "-Fallback-scrubbed-MfsluVmcVQwKhqOQsjx"}}, {"customer":
+        {"id": "-Fallback-scrubbed-TGtZhRwdGcHbLmqMXnlWEIaIzNkbvYAvFppp", "first_name":
+        "Fake-Dylan", "last_name": "Fake-Hartman", "email": "fake.yjones@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739181201, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739181202, "locale":
+        "-Fallback-scrubbed-KhmlC", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 2955, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-FaqldVbtCqhUeDGoPHfVH",
+        "city": "Fake-West Jennifer", "state_code": "-Fallback-scrubbed-nk", "state":
+        "-Fallback-scrubbed-kQrwykFdhEHZm", "country": "-Fallback-scrubbed-qe", "zip":
+        "26929", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT", "object":
+        "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-ttB",
+        "mrr": 9055, "primary_payment_source_id": "-Fallback-scrubbed-ldBYGAmubIxLQSBbjsB",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-cSrURYnfcuvGydyabDGbpPyXkrVFhkMkbXuO",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-QxRtY"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-uKXODtlSWXuOlIIa", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1739181202, "updated_at": 1739181202, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 941, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-TGtZhRwdGcHbLmqMXnlWEIaIzNkbvYAvFppp",
+        "payment_source_id": "-Fallback-scrubbed-ldBYGAmubIxLQSBbjsB"}}, {"customer":
+        {"id": "-Fallback-scrubbed-VQvbkmiqEtVZOkQxdwsLwWAZqWjvgBaqkUuA", "first_name":
+        "Fake-Brenda", "last_name": "Fake-Kathryn", "email": "fake.cowanisaiah@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739181706, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739181706, "locale":
+        "-Fallback-scrubbed-KhmlC", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 499, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-dSsJkHaIqskcBhHpI",
+        "line2": "-Fallback-scrubbed-HiwaheCAmIdJ", "city": "Fake-East Jefferyborough",
+        "state_code": "-Fallback-scrubbed-xq", "state": "-Fallback-scrubbed-kQrwykFdhEHZm",
+        "country": "-Fallback-scrubbed-Cw", "zip": "98984", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT",
+        "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-ttB",
+        "mrr": 9055, "primary_payment_source_id": "-Fallback-scrubbed-WXTfbObRraijoAlBzrY",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-IFIAQRSDMPCIqMWcLPzoOrSpUZnTtGzxfUj",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-QxRtY"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-gXNViQQopZrnfYXC", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1739181706, "updated_at": 1739181706, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 6467, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-VQvbkmiqEtVZOkQxdwsLwWAZqWjvgBaqkUuA",
+        "payment_source_id": "-Fallback-scrubbed-WXTfbObRraijoAlBzrY"}}, {"customer":
+        {"id": "-Fallback-scrubbed-rFnMpfffcyOotuKszzrVAaxtELMcExsZdKxt", "first_name":
+        "Fake-Dylan", "last_name": "Fake-Hartman", "email": "fake.heidishepard@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739182389, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739182391, "locale":
+        "-Fallback-scrubbed-kLSMJ", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 8929, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-FaqldVbtCqhUeDGoPHfVH",
+        "city": "Fake-Mitchellshire", "state_code": "-Fallback-scrubbed-VL", "state":
+        "-Fallback-scrubbed-WTNQzwF", "country": "-Fallback-scrubbed-qe", "zip": "87349",
+        "validation_status": "-Fallback-scrubbed-UnYBSqniyZbAJKf", "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"},
+        "card_status": "-Fallback-scrubbed-XeIiB", "promotional_credits": 1857, "refundable_credits":
+        1857, "excess_payments": 1857, "unbilled_charges": 1857, "preferred_currency_code":
+        "-Fallback-scrubbed-vNA", "mrr": 8875, "primary_payment_source_id": "-Fallback-scrubbed-MpzFgLNMZPPXrLfgGak",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-lPuSkoBpsubhGVkzavsNulGoxPQoNzIzWBcvLBdevPbIhXzt",
+        "gateway": "-Fallback-scrubbed-ylvqkX", "gateway_account_id": "-Fallback-scrubbed-aeIICpBYxgzOHjyOiKS",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-euxbbzqPQN",
+        "cf_brand": "-Fallback-scrubbed-UiO", "cf_locale": "-Fallback-scrubbed-fmgMbotdTtz"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-ylvqkX",
+        "gateway_account_id": "-Fallback-scrubbed-aeIICpBYxgzOHjyOiKS", "iin": "-Fallback-scrubbed-zxbmRm",
+        "last4": "2470", "card_type": "-Fallback-scrubbed-gMhB", "funding_type": "-Fallback-scrubbed-zdVbCR",
+        "expiry_month": 9126, "expiry_year": 3661, "issuing_country": "-Fallback-scrubbed-qe",
+        "created_at": 1739182390, "updated_at": 1739182391, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-MUGxrWBlMYSGhA", "resource_version": 592,
+        "object": "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-BUejMSHKrfBIrdee",
+        "customer_id": "-Fallback-scrubbed-rFnMpfffcyOotuKszzrVAaxtELMcExsZdKxt",
+        "payment_source_id": "-Fallback-scrubbed-MpzFgLNMZPPXrLfgGak"}}, {"customer":
+        {"id": "-Fallback-scrubbed-VwVlbunmNGwXXbKyLvPdtsjzDDEnEkhMQNHA", "first_name":
+        "Fake-Brenda", "last_name": "Fake-Scott", "email": "fake.jamesthompson@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739183836, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739183837, "locale":
+        "-Fallback-scrubbed-kLSMJ", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 8211, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-hjYjVduPZzVfkVhyiJ",
+        "line2": "-Fallback-scrubbed-ISwgJuMBFly", "city": "Fake-South Jennifer",
+        "state_code": "-Fallback-scrubbed-xq", "state": "-Fallback-scrubbed-fphxHfoshxE",
+        "country": "-Fallback-scrubbed-Cw", "zip": "17961", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT",
+        "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-vNA",
+        "mrr": 9960, "primary_payment_source_id": "-Fallback-scrubbed-IKagTeAUUNrTVeinff",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-GEhBqKvgmtmmYUNNqZvrjmhkGULZSzwAtyBNxmMbUlroafrt",
+        "gateway": "-Fallback-scrubbed-ylvqkX", "gateway_account_id": "-Fallback-scrubbed-aeIICpBYxgzOHjyOiKS",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-euxbbzqPQN",
+        "cf_brand": "-Fallback-scrubbed-UiO", "cf_locale": "-Fallback-scrubbed-fmgMbotdTtz"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-ylvqkX",
+        "gateway_account_id": "-Fallback-scrubbed-aeIICpBYxgzOHjyOiKS", "iin": "-Fallback-scrubbed-zxbmRm",
+        "last4": "2470", "card_type": "-Fallback-scrubbed-gMhB", "funding_type": "-Fallback-scrubbed-zdVbCR",
+        "expiry_month": 9126, "expiry_year": 3661, "issuing_country": "-Fallback-scrubbed-qe",
+        "created_at": 1739183837, "updated_at": 1739183837, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-MUGxrWBlMYSGhA", "resource_version": 3883,
+        "object": "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-BUejMSHKrfBIrdee",
+        "customer_id": "-Fallback-scrubbed-VwVlbunmNGwXXbKyLvPdtsjzDDEnEkhMQNHA",
+        "payment_source_id": "-Fallback-scrubbed-IKagTeAUUNrTVeinff"}}, {"customer":
+        {"id": "-Fallback-scrubbed-XMntOURvJUQLGzEzcLOCRyBPFYmXYcEhLGBb", "first_name":
+        "Fake-Jerry", "last_name": "Fake-Kathryn", "email": "fake.lisaward@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "is_location_valid": true, "created_at": 1739173362, "created_from_ip":
+        "-Fallback-scrubbed-qLDPszPUjOM", "taxability": "-Fallback-scrubbed-QGETLCt",
+        "updated_at": 1739185031, "locale": "-Fallback-scrubbed-KhmlC", "pii_cleared":
+        "-Fallback-scrubbed-HZDqmk", "channel": "-Fallback-scrubbed-TKU", "resource_version":
+        4756, "deleted": false, "object": "-Fallback-scrubbed-DdFzwkXx", "billing_address":
+        {"line1": "-Fallback-scrubbed-dOknOKBwwXadh", "line2": "-Fallback-scrubbed-sAfbG",
+        "city": "Fake-New William", "state": "Fake-New William", "country": "-Fallback-scrubbed-If",
+        "zip": "63319", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT", "object":
+        "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-ttB",
+        "mrr": 5514, "primary_payment_source_id": "-Fallback-scrubbed-PblngyVQsEKmVwbyYYu",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-ZeNJhPvpGKtfsxklWZKcUQdxhWdcIkaXebN",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-QxRtY"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-nOwAQjEsmYknYEzY", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1739173363, "updated_at": 1739173363, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 6885, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-XMntOURvJUQLGzEzcLOCRyBPFYmXYcEhLGBb",
+        "payment_source_id": "-Fallback-scrubbed-PblngyVQsEKmVwbyYYu"}}, {"customer":
+        {"id": "-Fallback-scrubbed-ZEQSzRxgvHBiAKuFMzGZQpTMbInbLIsHvzNH", "first_name":
+        "Fake-Joshua", "last_name": "Fake-Boyer", "email": "fake.rcollins@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739189666, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739189667, "locale":
+        "-Fallback-scrubbed-KhmlC", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 7397, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-SUgbLgTmSOKgthjjTBhDi",
+        "city": "Fake-Huertabury", "state_code": "-Fallback-scrubbed-xs", "state":
+        "-Fallback-scrubbed-kQrwykFdhEHZm", "country": "-Fallback-scrubbed-Cw", "zip":
+        "85890", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT", "object":
+        "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-ttB",
+        "mrr": 9055, "primary_payment_source_id": "-Fallback-scrubbed-NdlfmCxUJkRMOLdgFeZ",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-nvSBkHEWznPbimFsaBaTDOSLIcvAJnRaCcuD",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-QxRtY"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-OJZYoWUQjUxOnTqq", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1739189667, "updated_at": 1739189667, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 1561, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-ZEQSzRxgvHBiAKuFMzGZQpTMbInbLIsHvzNH",
+        "payment_source_id": "-Fallback-scrubbed-NdlfmCxUJkRMOLdgFeZ"}}, {"customer":
+        {"id": "-Fallback-scrubbed-ofeFmetIyPlGyniJeClgjtHptfRqxEoXHaiC", "first_name":
+        "Fake-Alexander", "last_name": "Fake-Oconnor", "email": "fake.pattersonbrooke@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739179902, "created_from_ip": "-Fallback-scrubbed-OJtXkFemEgfq",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739189725, "locale":
+        "-Fallback-scrubbed-KhmlC", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 9678, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-mouUYdcdXdGh",
+        "city": "Fake-Gallegosbury", "state_code": "-Fallback-scrubbed-wz", "state":
+        "-Fallback-scrubbed-kQrwykFdhEHZm", "country": "-Fallback-scrubbed-qe", "zip":
+        "26602", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT", "object":
+        "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-ttB",
+        "mrr": 9985, "primary_payment_source_id": "-Fallback-scrubbed-QPqhbLJKmzDfPomQgTH",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-PIFXqhAWZXpkEgdGTJmTHKLzVfnedokxyLt",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-QxRtY"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-iXqBqdXisKxbprIc", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1739179903, "updated_at": 1739179903, "ip_address": "-Fallback-scrubbed-OJtXkFemEgfq",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 5675, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-ofeFmetIyPlGyniJeClgjtHptfRqxEoXHaiC",
+        "payment_source_id": "-Fallback-scrubbed-QPqhbLJKmzDfPomQgTH"}}, {"customer":
+        {"id": "-Fallback-scrubbed-AplrksSIRltChLpEdhqpsjZALXHsONyRUdXc", "first_name":
+        "Fake-William", "last_name": "Fake-Fernandez", "email": "fake.brewerkelly@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739190111, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739190112, "locale":
+        "-Fallback-scrubbed-Zftkm", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 3681, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-hjYjVduPZzVfkVhyiJ",
+        "line2": "-Fallback-scrubbed-ISwgJuMBFly", "city": "Fake-South Jennifer",
+        "state_code": "-Fallback-scrubbed-xq", "state": "-Fallback-scrubbed-JNHcMNyptQBNo",
+        "country": "-Fallback-scrubbed-Cw", "zip": "39664", "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT",
+        "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-LHP",
+        "mrr": 2183, "primary_payment_source_id": "-Fallback-scrubbed-mtjrvwrqmKTzFttBWtg",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-rAuEanpaTvLOFkwDnUHKJAenjJnYfGTWUDON",
+        "gateway": "-Fallback-scrubbed-PENRD", "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-OtHbUiAe",
+        "cf_brand": "-Fallback-scrubbed-OtHbUiAe", "cf_locale": "-Fallback-scrubbed-hXnIu"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-PENRD",
+        "gateway_account_id": "-Fallback-scrubbed-pSUHzXVWECUuVMNGPqu", "ref_tx_id":
+        "-Fallback-scrubbed-TfXyPXGEFSElvPGn", "first_name": "Fake-Kimberly", "last_name":
+        "Fake-Taylor", "iin": "6151", "last4": "9873", "card_type": "-Fallback-scrubbed-gMhB",
+        "funding_type": "-Fallback-scrubbed-JoSNrtDZJ", "expiry_month": 8154, "expiry_year":
+        2322, "created_at": 1739190112, "updated_at": 1739190112, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-fHlt", "resource_version": 7469, "object":
+        "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-KJjVhFnQehEisrlr",
+        "customer_id": "-Fallback-scrubbed-AplrksSIRltChLpEdhqpsjZALXHsONyRUdXc",
+        "payment_source_id": "-Fallback-scrubbed-mtjrvwrqmKTzFttBWtg"}}, {"customer":
+        {"id": "-Fallback-scrubbed-XPMHnvjYwARmVSEm", "first_name": "Fake-Willie",
+        "last_name": "Fake-Novak", "email": "fake.lbyrd@example.com", "auto_collection":
+        "-Fallback-scrubbed-Cze", "net_term_days": 1857, "allow_direct_debit": true,
+        "created_at": 1739196990, "created_from_ip": "-Fallback-scrubbed-nYGAsIuSgHpVr",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739196990, "locale":
+        "-Fallback-scrubbed-GF", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 9308, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"country": "-Fallback-scrubbed-cS",
+        "validation_status": "-Fallback-scrubbed-wmwVZxHQsREhT", "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"},
+        "card_status": "-Fallback-scrubbed-qZLXUcH", "promotional_credits": 1857,
+        "refundable_credits": 1857, "excess_payments": 1857, "unbilled_charges": 1857,
+        "preferred_currency_code": "-Fallback-scrubbed-vNA", "mrr": 1857, "business_entity_id":
+        "-Fallback-scrubbed-siTCc"}}, {"customer": {"id": "-Fallback-scrubbed-ZJJDNOGsbWPFBvHhhgeFLNqrvIBeVKJzAmzm",
+        "first_name": "Fake-Dylan", "last_name": "Fake-Hartman", "email": "fake.johnburnett@example.com",
+        "auto_collection": "-Fallback-scrubbed-PW", "net_term_days": 1857, "allow_direct_debit":
+        true, "created_at": 1739199804, "created_from_ip": "-Fallback-scrubbed-qLDPszPUjOM",
+        "taxability": "-Fallback-scrubbed-QGETLCt", "updated_at": 1739199805, "locale":
+        "-Fallback-scrubbed-kLSMJ", "pii_cleared": "-Fallback-scrubbed-HZDqmk", "channel":
+        "-Fallback-scrubbed-TKU", "resource_version": 9509, "deleted": false, "object":
+        "-Fallback-scrubbed-DdFzwkXx", "billing_address": {"line1": "-Fallback-scrubbed-uLABwbYdowTLLqivdRAZPWh",
+        "city": "Fake-Lake Christineburgh", "state_code": "-Fallback-scrubbed-VL",
+        "state": "-Fallback-scrubbed-WTNQzwF", "country": "-Fallback-scrubbed-qe",
+        "zip": "15693", "validation_status": "-Fallback-scrubbed-UnYBSqniyZbAJKf",
+        "object": "-Fallback-scrubbed-PFQzuOVZBkTYatt"}, "card_status": "-Fallback-scrubbed-XeIiB",
+        "promotional_credits": 1857, "refundable_credits": 1857, "excess_payments":
+        1857, "unbilled_charges": 1857, "preferred_currency_code": "-Fallback-scrubbed-vNA",
+        "mrr": 3751, "primary_payment_source_id": "-Fallback-scrubbed-TnglLPAYFoJfejQmyKI",
+        "payment_method": {"object": "-Fallback-scrubbed-XJTGfIRyKYsicP", "type":
+        "-Fallback-scrubbed-fHlt", "reference_id": "-Fallback-scrubbed-gckwjJCkUMoESsXoDQPZNbdSFUbLiIVkOWQHaoqUfcsnESTQ",
+        "gateway": "-Fallback-scrubbed-ylvqkX", "gateway_account_id": "-Fallback-scrubbed-EzGyGnBTPyalpPskBAz",
+        "status": "-Fallback-scrubbed-XeIiB"}, "business_entity_id": "-Fallback-scrubbed-siTCc",
+        "cf_brand": "-Fallback-scrubbed-siTCc", "cf_locale": "-Fallback-scrubbed-sTgezmPzGbb"},
+        "card": {"status": "-Fallback-scrubbed-XeIiB", "gateway": "-Fallback-scrubbed-ylvqkX",
+        "gateway_account_id": "-Fallback-scrubbed-EzGyGnBTPyalpPskBAz", "iin": "-Fallback-scrubbed-zxbmRm",
+        "last4": "2470", "card_type": "-Fallback-scrubbed-gMhB", "funding_type": "-Fallback-scrubbed-zdVbCR",
+        "expiry_month": 9126, "expiry_year": 3661, "issuing_country": "-Fallback-scrubbed-qe",
+        "created_at": 1739199805, "updated_at": 1739199805, "ip_address": "-Fallback-scrubbed-qLDPszPUjOM",
+        "powered_by": "-Fallback-scrubbed-MUGxrWBlMYSGhA", "resource_version": 2981,
+        "object": "-Fallback-scrubbed-fHlt", "masked_number": "-Fallback-scrubbed-BUejMSHKrfBIrdee",
+        "customer_id": "-Fallback-scrubbed-ZJJDNOGsbWPFBvHhhgeFLNqrvIBeVKJzAmzm",
+        "payment_source_id": "-Fallback-scrubbed-TnglLPAYFoJfejQmyKI"}}]}'
+    headers:
+      Cache-Control:
+      - no-store, no-cache, must-revalidate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json;charset=utf-8
+      Date:
+      - Tue, 11 Feb 2025 09:19:23 GMT
+      Expires:
+      - Thu, 01 Jan 1970 00:00:00 UTC
+      Pragma:
+      - no-cache
+      Server:
+      - ChargeBee
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      content-length:
+      - '42189'
+    status:
+      code: 200
+      message: OK
+version: 1

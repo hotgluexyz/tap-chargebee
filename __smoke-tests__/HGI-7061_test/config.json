@@ -1,0 +1,11 @@
+{
+    "start_date": "2024-01-01T00:00:00.000Z",
+    "end_date": null,
+    "product_catalog": "2.0",
+    "exclude_zero_invoices": true,
+    "timezone": "America/Los_Angeles",
+    "include_deleted": true,
+    "batch_size_in_months": 1,
+    "api_key": "fak***",
+    "site": "fake-site"
+}
