@@ -24,9 +24,12 @@ class GrantBlocksStream(BaseChargebeeStream):
         self.synced_with_subscriptions = False
 
     def get_url(self):
-        return (
-            'https://{}/api/v2/grant_blocks/grant_block_list_internal'
-        ).format(self.config.get('full_site'))
+        base_url = (self.config.get('grant_blocks_base_url')
+                    or 'https://{}'.format(self.config.get('full_site')))
+        if not base_url.startswith(('http://', 'https://')):
+            base_url = 'https://{}'.format(base_url)
+        return '{}/api/v2/grant_blocks/grant_block_list_internal'.format(
+            base_url.rstrip('/'))
 
     def get_subscription_batches(self):
         if 'grant_blocks_subscription_ids' in self.config:
