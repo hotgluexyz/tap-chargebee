@@ -26,7 +26,9 @@ class GrantBlocksStream(BaseChargebeeStream):
     def get_url(self):
         base_url = (self.config.get('grant_blocks_base_url')
                     or 'https://{}'.format(self.config.get('full_site')))
-        if not base_url.startswith(('http://', 'https://')):
+        if base_url.startswith('http://'):
+            raise ValueError('grant_blocks_base_url must use https://')
+        if not base_url.startswith('https://'):
             base_url = 'https://{}'.format(base_url)
         return '{}/api/v2/grant_blocks/grant_block_list_internal'.format(
             base_url.rstrip('/'))
