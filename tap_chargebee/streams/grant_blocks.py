@@ -30,7 +30,7 @@ class GrantBlocksStream(BaseChargebeeStream):
             raise ValueError('grant_blocks_base_url must use https://')
         if not base_url.startswith('https://'):
             base_url = 'https://{}'.format(base_url)
-        return '{}/api/v2/grant_blocks/grant_block_list_internal'.format(
+        return '{}/api/v2/grant_blocks/internal'.format(
             base_url.rstrip('/'))
 
     def get_subscription_batches(self):
